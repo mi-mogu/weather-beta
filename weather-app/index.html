@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>나만의 날씨 검색</title>
+  <link rel="stylesheet" href="styles/style.css" />
+  <script defer src="scripts/app.js"></script>
+</head>
+<body>
+  <div class="app">
+    <!-- 제목 -->
+    <header class="header">
+      <h1>날씨 검색</h1>
+      <p class="subtitle">도시를 입력하면 날씨와 옷차림을 알려드릴게요</p>
+    </header>
+
+    <!-- 검색 영역 -->
+    <section class="search-section">
+      <input
+        type="text"
+        id="city-input"
+        placeholder="도시 이름을 입력하세요 (예: 서울)"
+      />
+      <button id="search-btn">검색</button>
+    </section>
+
+    <!-- 번역 결과 표시 -->
+    <p id="translated-city" class="translated-city">
+      번역된 도시: (아직 없음)
+    </p>
+
+    <!-- 🔹 최근 검색 기록 -->
+    <section class="history-section">
+      <div class="history-header">
+        <span class="history-title">최근 검색</span>
+        <button id="clear-history-btn" class="history-clear-btn" type="button">
+          전체 삭제
+        </button>
+      </div>
+      <div id="history-list" class="history-list">
+        <p class="history-empty">최근 검색 기록이 없습니다.</p>
+      </div>
+    </section>
+
+    <!-- 결과 영역 (위: 날씨, 아래: 옷차림 추천) -->
+    <main class="result-section">
+      <!-- 날씨 카드 -->
+      <section class="weather-card">
+        <h3 class="section-title">
+          <span class="section-dot"></span>
+          날씨 정보
+        </h3>
+
+        <!-- 🔹 도시 이름 제목 -->
+        <h2 id="city-name" class="city-name-title">
+          도시를 검색하면 도시 이름이 표시됩니다
+        </h2>
+
+        <!-- 날씨 이미지(아이콘) -->
+        <div class="weather-image">
+          <span class="placeholder-text">날씨 이미지</span>
+        </div>
+
+        <!-- 현재 온도 -->
+        <div class="current-temp">
+          <h3>현재 온도</h3>
+          <p id="current-temp-value" class="temp-value">
+            -- °C
+          </p>
+        </div>
+
+        <!-- 미래 온도(일별) -->
+        <div class="future-temp">
+          <h3>미래 온도 (일별)</h3>
+          <div id="future-temp-list" class="future-temp-list">
+            <div class="future-temp-item">
+              <span class="label">예시</span>
+              <span class="value">-- °C</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 시간별 날씨 -->
+        <div class="hourly-temp">
+          <h3>시간별 날씨 (1~3시간 후)</h3>
+          <div id="hourly-list" class="hourly-list">
+            <div class="hourly-item">
+              <span class="label">1시간 후</span>
+              <span class="value">-- °C</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 옷차림 추천 카드 -->
+      <section class="outfit-section">
+        <h3 class="section-title">
+          <span class="section-dot section-dot--warm"></span>
+          오늘의 옷차림 추천
+        </h3>
+
+        <!-- 추천 출처 표시 (AI / 기본) -->
+        <div class="outfit-mode-indicator">
+          <span class="mode-label">추천 방식</span>
+          <div class="mode-pills">
+            <span id="mode-ai" class="mode-pill">
+              AI
+            </span>
+            <span id="mode-basic" class="mode-pill">
+              기본
+            </span>
+          </div>
+        </div>
+
+        <p id="outfit-text">
+          날씨를 검색하면 이곳에 옷차림 추천이 표시됩니다.
+        </p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

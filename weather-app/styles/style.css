@@ -1,0 +1,415 @@
+/* 전체 레이아웃 기본 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Noto Sans KR", sans-serif;
+  background: radial-gradient(circle at top, #dbeafe 0, #eff6ff 40%, #e2e8f0 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+/* 앱 컨테이너 */
+.app {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+  padding: 24px 20px 28px;
+  backdrop-filter: blur(10px);
+}
+
+/* 제목 */
+.header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.header h1 {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.subtitle {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* 검색 영역 */
+.search-section {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+#city-input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid #cbd5f5;
+  font-size: 0.95rem;
+  outline: none;
+  background: #f9fafb;
+}
+
+#city-input::placeholder {
+  color: #9ca3af;
+}
+
+#city-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  background: #ffffff;
+}
+
+#search-btn {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 0.95rem;
+}
+
+#search-btn:hover {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.4);
+}
+
+/* 번역된 도시 표시 */
+.translated-city {
+  font-size: 0.85rem;
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+/* 🔹 최근 검색 기록 섹션 */
+.history-section {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 12px;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.history-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.history-clear-btn {
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: none;
+  background: #fee2e2;
+  color: #b91c1c;
+  cursor: pointer;
+}
+
+.history-clear-btn:hover {
+  background: #fecaca;
+}
+
+.history-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 22px;
+}
+
+.history-empty {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+/* 개별 히스토리 아이템 */
+.history-item {
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 3px 6px rgba(148, 163, 184, 0.35);
+}
+
+.history-term {
+  border: none;
+  background: transparent;
+  padding: 4px 8px 4px 10px;
+  font-size: 0.8rem;
+  color: #374151;
+  cursor: pointer;
+}
+
+.history-term:hover {
+  background: #eff6ff;
+}
+
+.history-delete {
+  border: none;
+  background: transparent;
+  padding: 4px 6px;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.history-delete:hover {
+  color: #ef4444;
+}
+
+/* 결과 전체 영역 (위/아래 카드로 쌓기) */
+.result-section {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 섹션 공통 제목 */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.section-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #3b82f6;
+}
+
+.section-dot--warm {
+  background: #f97316;
+}
+
+/* 🔹 도시 이름 제목 */
+.city-name-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+/* 날씨 카드 */
+.weather-card {
+  background: linear-gradient(145deg, #e0f2fe, #f9fafb);
+  border-radius: 16px;
+  padding: 16px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+}
+
+/* 날씨 이미지 자리 */
+.weather-image {
+  height: 120px;
+  border-radius: 14px;
+  background: radial-gradient(circle at top, #bfdbfe 0, #eff6ff 60%, #e5e7eb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-text {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+/* 현재 / 미래 / 시간별 제목 */
+.current-temp h3,
+.future-temp h3,
+.hourly-temp h3 {
+  font-size: 0.95rem;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+/* 현재 온도 값 */
+.temp-value {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #1d4ed8;
+}
+
+/* 미래 온도 리스트 (일별) */
+.future-temp-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.future-temp-item {
+  flex: 1 1 30%;
+  min-width: 90px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 8px 10px;
+  text-align: center;
+  box-shadow: 0 6px 12px rgba(148, 163, 184, 0.35);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.future-temp-item .label {
+  font-size: 0.8rem;
+  color: #64748b;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.future-temp-item .value {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* 날씨 아이콘 */
+.weather-icon-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.weather-icon {
+  width: 80px;
+  height: 80px;
+}
+
+.weather-desc {
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+/* 시간별 날씨 (1~3시간 후) */
+.hourly-temp {
+  margin-top: 4px;
+}
+
+.hourly-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hourly-item {
+  flex: 1 1 30%;
+  min-width: 90px;
+  background: #eff6ff;
+  border-radius: 12px;
+  padding: 8px 10px;
+  text-align: center;
+  box-shadow: 0 6px 12px rgba(148, 163, 184, 0.35);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.hourly-item .label {
+  display: block;
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.hourly-item .value {
+  display: block;
+  font-weight: 600;
+  color: #0f172a;
+  margin-top: 4px;
+}
+
+.hourly-icon {
+  width: 32px;
+  height: 32px;
+}
+
+/* 옷차림 추천 섹션 */
+.outfit-section {
+  border-radius: 16px;
+  padding: 16px 16px 18px;
+  background: linear-gradient(145deg, #fef9c3, #fff7ed);
+  border: 1px solid #facc15;
+  box-shadow: 0 10px 22px rgba(250, 204, 21, 0.35);
+}
+
+/* AI / 기본 모드 인디케이터 */
+.outfit-mode-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.mode-label {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.mode-pills {
+  display: flex;
+  gap: 6px;
+}
+
+/* 기본 pill 스타일 */
+.mode-pill {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #d4d4d8;
+  color: #6b7280;
+  background: #f9fafb;
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.2);
+  transition: background 0.15s ease, color 0.15s ease,
+    box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+/* "불 들어온" 상태 (AI / 기본 활성화 표시) */
+.mode-pill--active {
+  background: #22c55e !important;
+  color: #f9fafb !important;
+  border-color: #16a34a !important;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.4) !important;
+}
+
+#outfit-text {
+  font-size: 0.95rem;
+  color: #6b21a8;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+/* 모바일에서 여백 조정 */
+@media (max-width: 480px) {
+  .app {
+    padding: 20px 16px 24px;
+  }
+}
