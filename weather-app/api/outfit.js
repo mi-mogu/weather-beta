@@ -29,7 +29,7 @@ Current temperature: ${temp}°C.
 Weather condition: ${conditionText}.
 
 Recommend an outfit in ONE short sentence.
-Reply in Korean only.
+Reply in Korean with warm, friendly tone.
               `.trim(),
             },
           ],
