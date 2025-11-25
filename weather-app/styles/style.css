@@ -1,19 +1,21 @@
-/* 전체 레이아웃 기본 */
+/* ============ 기본 리셋 ============ */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* ============ 전체 레이아웃 ============ */
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     "Noto Sans KR", sans-serif;
-  background: radial-gradient(circle at top, #dbeafe 0, #eff6ff 40%, #e2e8f0 100%);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding: 20px;
+  background: #e5e7eb; /* JS가 테마 적용하기 전 기본 배경 */
+  transition: background 0.6s ease;
 }
 
 /* 앱 컨테이너 */
@@ -27,7 +29,7 @@ body {
   backdrop-filter: blur(10px);
 }
 
-/* 제목 */
+/* ============ 헤더 ============ */
 .header {
   text-align: center;
   margin-bottom: 18px;
@@ -45,7 +47,7 @@ body {
   color: #64748b;
 }
 
-/* 검색 영역 */
+/* ============ 검색 영역 ============ */
 .search-section {
   display: flex;
   gap: 8px;
@@ -97,7 +99,7 @@ body {
   margin-bottom: 8px;
 }
 
-/* 🔹 최근 검색 기록 섹션 */
+/* ============ 최근 검색 기록 ============ */
 .history-section {
   background: #f9fafb;
   border-radius: 12px;
@@ -182,7 +184,7 @@ body {
   color: #ef4444;
 }
 
-/* 결과 전체 영역 (위/아래 카드로 쌓기) */
+/* ============ 결과 섹션 전체 ============ */
 .result-section {
   margin-top: 4px;
   display: flex;
@@ -212,15 +214,16 @@ body {
   background: #f97316;
 }
 
-/* 🔹 도시 이름 제목 */
+/* 도시 이름 제목 ("서울의 날씨") */
 .city-name-title {
   font-size: 1.05rem;
   font-weight: 700;
   color: #0f172a;
   margin-bottom: 8px;
+  text-align: left;
 }
 
-/* 날씨 카드 */
+/* ============ 날씨 카드 ============ */
 .weather-card {
   background: linear-gradient(145deg, #e0f2fe, #f9fafb);
   border-radius: 16px;
@@ -310,7 +313,7 @@ body {
   color: #475569;
 }
 
-/* 시간별 날씨 (1~3시간 후) */
+/* ============ 시간별 날씨 (1~3시간 후) ============ */
 .hourly-temp {
   margin-top: 4px;
 }
@@ -351,7 +354,7 @@ body {
   height: 32px;
 }
 
-/* 옷차림 추천 섹션 */
+/* ============ 옷차림 추천 카드 ============ */
 .outfit-section {
   border-radius: 16px;
   padding: 16px 16px 18px;
@@ -407,34 +410,50 @@ body {
   margin-top: 4px;
 }
 
-/* 모바일에서 여백 조정 */
-@media (max-width: 480px) {
-  .app {
-    padding: 20px 16px 24px;
-  }
-}
-
-/* 부드럽게 배경 바뀌도록 */
-body {
-  transition: background 0.6s ease;
-}
-
+/* ============ 시간대별 배경 테마 ============ */
 /* 아침 (05~11시) */
 body.theme-morning {
-  background: radial-gradient(circle at top, #fee2e2 0, #fef9c3 40%, #bfdbfe 100%);
+  background: radial-gradient(
+    circle at top,
+    #fee2e2 0,
+    #fef9c3 40%,
+    #bfdbfe 100%
+  ) !important;
 }
 
 /* 낮 (11~17시) */
 body.theme-day {
-  background: radial-gradient(circle at top, #dbeafe 0, #eff6ff 40%, #e2e8f0 100%);
+  background: radial-gradient(
+    circle at top,
+    #dbeafe 0,
+    #eff6ff 40%,
+    #e2e8f0 100%
+  ) !important;
 }
 
 /* 저녁 (17~21시) */
 body.theme-evening {
-  background: radial-gradient(circle at top, #fed7aa 0, #f97316 40%, #1e293b 100%);
+  background: radial-gradient(
+    circle at top,
+    #fed7aa 0,
+    #f97316 40%,
+    #1e293b 100%
+  ) !important;
 }
 
 /* 밤 (21~05시) */
 body.theme-night {
-  background: radial-gradient(circle at top, #020617 0, #0f172a 40%, #1e293b 100%);
+  background: radial-gradient(
+    circle at top,
+    #020617 0,
+    #0f172a 40%,
+    #1e293b 100%
+  ) !important;
+}
+
+/* ============ 모바일 반응형 ============ */
+@media (max-width: 480px) {
+  .app {
+    padding: 20px 16px 24px;
+  }
 }
