@@ -1,12 +1,4 @@
-// ==== 1. WeatherAPI 기본 설정 ====
-const WEATHER_API_KEY = "";
-const WEATHER_BASE_URL = "https://api.weatherapi.com/v1";
-
-// ==== 2. Google AI Studio (Gemini) 설정 ====
-const GOOGLE_API_KEY = "";
-const GEMINI_MODEL = "gemini-2.5-flash-lite";
-
-// ==== 3. DOM 요소 선택 ====
+// ==== 0. DOM 요소 선택 ====
 const cityInput = document.getElementById("city-input");
 const searchBtn = document.getElementById("search-btn");
 const cityNameEl = document.getElementById("city-name");
@@ -29,7 +21,7 @@ const clearHistoryBtn = document.getElementById("clear-history-btn");
 const HISTORY_KEY = "weatherSearchHistory";
 let searchHistory = [];
 
-// ==== 3-1. 옷차림 모드 표시 함수 ====
+// ==== 1. 옷차림 모드 표시 ====
 // mode: "ai" | "basic" | null
 function setOutfitMode(mode) {
   if (!modeAiEl || !modeBasicEl) return;
@@ -45,7 +37,7 @@ function setOutfitMode(mode) {
 }
 // 처음에는 아무 색도 안 들어온 상태 (호출 X)
 
-// ==== 3-2. 최근 검색 히스토리 관련 함수 ====
+// ==== 2. 최근 검색 히스토리 ====
 function renderHistory() {
   if (!historyListEl) return;
 
@@ -112,17 +104,17 @@ function addToHistory(term) {
 }
 
 // ===============================================
-// 4. WeatherAPI: 도시 이름으로 3일 예보 가져오기
+// 3. 서버(Proxy) API 호출 함수들
 // ===============================================
-async function getForecastByCity(city) {
-  const url = `${WEATHER_BASE_URL}/forecast.json?key=${WEATHER_API_KEY}&q=${encodeURIComponent(
-    city
-  )}&days=3&lang=ko`;
 
-  const res = await fetch(url);
+// 3-1. WeatherAPI → /api/weather (도시명은 영어)
+async function getForecastByCity(cityEnglish) {
+  const res = await fetch(
+    `/api/weather?city=${encodeURIComponent(cityEnglish)}`
+  );
 
   if (!res.ok) {
-    console.error("WeatherAPI error:", await res.text());
+    console.error("WeatherAPI proxy error:", await res.text());
     throw new Error("날씨 정보를 가져오지 못했습니다.");
   }
 
@@ -130,103 +122,48 @@ async function getForecastByCity(city) {
   return data;
 }
 
-// =======================================================
-// 5. Gemini: 한글 도시명을 영어 도시명으로 번역
-// =======================================================
+// 3-2. 번역 → /api/translate-city (한글 도시 → 영어 도시)
 async function translateCityNameToEnglish(koreanCity) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
-
-  const body = {
-    contents: [
-      {
-        role: "user",
-        parts: [
-          {
-            text:
-              "For each input, output only the corresponding English city name.\n" +
-              "서울 → Seoul\n부산 → Busan" +
-              `${koreanCity} →`,
-          },
-        ],
-      },
-    ],
-    generationConfig: {
-      temperature: 0.2,
-      maxOutputTokens: 16,
-      responseMimeType: "text/plain",
-    },
-  };
-
-  const res = await fetch(url, {
+  const res = await fetch("/api/translate-city", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-goog-api-key": GOOGLE_API_KEY,
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify({ text: koreanCity }),
   });
 
   if (!res.ok) {
-    console.error("Gemini translation error:", await res.text());
+    console.error("Gemini translation proxy error:", await res.text());
     throw new Error("번역 API 호출 실패");
   }
 
   const data = await res.json();
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+  const english = data?.translatedCity?.trim();
 
-  if (!text) {
+  if (!english) {
     throw new Error("번역 결과를 읽을 수 없습니다.");
   }
 
-  return text;
+  return english;
 }
 
-// =======================================================
-// 6. Gemini: 온도 + 날씨 설명으로 옷차림 추천 (한국어)
-// =======================================================
+// 3-3. 옷차림 추천 → /api/outfit
 async function recommendOutfitToKorea(temp, conditionText) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
-
-  const body = {
-    contents: [
-      {
-        role: "user",
-        parts: [
-          {
-            text: `
-Current temperature: ${temp}°C.
-Weather condition: ${conditionText}.
-
-Recommend an outfit in one caring sentence, reply in Korean.
-
-            `.trim(),
-          },
-        ],
-      },
-    ],
-    generationConfig: {
-      temperature: 1.5,
-      maxOutputTokens: 50,
-      responseMimeType: "text/plain",
-    },
-  };
-
-  const res = await fetch(url, {
+  const res = await fetch("/api/outfit", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-goog-api-key": GOOGLE_API_KEY,
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify({ temp, conditionText }),
   });
 
   if (!res.ok) {
-    console.error("Gemini outfit error:", await res.text());
+    console.error("Gemini outfit proxy error:", await res.text());
     throw new Error("옷차림 추천 API 호출 실패");
   }
 
   const data = await res.json();
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+  const text = data?.outfit?.trim();
 
   if (!text) {
     throw new Error("옷차림 추천 결과를 읽을 수 없습니다.");
@@ -236,7 +173,7 @@ Recommend an outfit in one caring sentence, reply in Korean.
 }
 
 // =======================================================
-// 7. JS 버전 옷차림 추천 (AI 실패 시 fallback)
+// 4. JS 버전 옷차림 추천 (AI 실패 시 fallback)
 // =======================================================
 function getOutfitSuggestion(temp) {
   if (temp <= 0) {
@@ -257,10 +194,10 @@ function getOutfitSuggestion(temp) {
 }
 
 // =======================================================
-// 8. 화면에 날씨/예보 렌더링 (일별 + 시간별)
+// 5. 화면에 날씨/예보 렌더링 (일별 + 시간별)
 // =======================================================
 function renderWeather(data, displayCity) {
-  // 1) 도시 이름
+  // 1) 도시 이름: "서울의 날씨" 처럼 표시
   const cityName =
     displayCity && displayCity.trim()
       ? `${displayCity.trim()}의 날씨`
@@ -349,7 +286,7 @@ function renderWeather(data, displayCity) {
 }
 
 // =======================================================
-// 9. 검색 처리 흐름
+// 6. 검색 처리 흐름
 // =======================================================
 async function handleSearch(initialInput) {
   const rawInput =
@@ -382,7 +319,7 @@ async function handleSearch(initialInput) {
       translatedCityEl.textContent = "번역된 도시: (번역 중...)";
     }
 
-    // 1) 한글 → 영어 도시명 번역
+    // 1) 한글 → 영어 도시명 번역 (서버 경유)
     const englishCity = await translateCityNameToEnglish(userInput);
     console.log("번역된 도시명:", englishCity);
 
@@ -390,10 +327,10 @@ async function handleSearch(initialInput) {
       translatedCityEl.textContent = `번역된 도시: ${englishCity}`;
     }
 
-    // 2) 번역된 도시명으로 WeatherAPI 호출
+    // 2) 번역된 도시명으로 날씨 호출 (서버 경유)
     const data = await getForecastByCity(englishCity);
 
-    // 3) 화면 렌더링 (현재 온도, 날씨 설명 받아오기)
+    // 3) 화면 렌더링 (현재 온도, 날씨 설명 받아오기) — 화면엔 "서울의 날씨"처럼 한글 도시 사용
     const { currentTemp, conditionText } = renderWeather(data, userInput);
 
     // 🔹 최근 검색 기록에 추가
@@ -433,7 +370,7 @@ async function handleSearch(initialInput) {
 }
 
 // =======================================================
-// 10. 이벤트 리스너 등록
+// 7. 이벤트 리스너
 // =======================================================
 if (searchBtn) {
   searchBtn.addEventListener("click", () => handleSearch());
