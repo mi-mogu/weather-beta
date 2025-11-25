@@ -1,9 +1,9 @@
 // ==== 1. WeatherAPI 기본 설정 ====
-const WEATHER_API_KEY = "cf581cb452f148d1bb345533251811"; // 👉 실제 키로 교체
+const WEATHER_API_KEY = "";
 const WEATHER_BASE_URL = "https://api.weatherapi.com/v1";
 
 // ==== 2. Google AI Studio (Gemini) 설정 ====
-const GOOGLE_API_KEY = "AIzaSyA1zid6uMiREdjc8TrQbMr6Btc7xKP7zFw"; // 👉 실제 키로 교체
+const GOOGLE_API_KEY = "";
 const GEMINI_MODEL = "gemini-2.5-flash-lite";
 
 // ==== 3. DOM 요소 선택 ====
