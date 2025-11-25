@@ -37,7 +37,7 @@ Reply in Korean with warm, friendly tone.
       ],
       generationConfig: {
         temperature: 1.0,
-        maxOutputTokens: 64,
+        maxOutputTokens: 150,
         responseMimeType: "text/plain",
       },
     };
