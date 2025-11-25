@@ -36,7 +36,7 @@ Reply in Korean only.
         },
       ],
       generationConfig: {
-        temperature: 0.4,
+        temperature: 1.0,
         maxOutputTokens: 64,
         responseMimeType: "text/plain",
       },
