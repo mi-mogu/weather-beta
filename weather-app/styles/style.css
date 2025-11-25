@@ -413,3 +413,28 @@ body {
     padding: 20px 16px 24px;
   }
 }
+
+/* 부드럽게 배경 바뀌도록 */
+body {
+  transition: background 0.6s ease;
+}
+
+/* 아침 (05~11시) */
+body.theme-morning {
+  background: radial-gradient(circle at top, #fee2e2 0, #fef9c3 40%, #bfdbfe 100%);
+}
+
+/* 낮 (11~17시) */
+body.theme-day {
+  background: radial-gradient(circle at top, #dbeafe 0, #eff6ff 40%, #e2e8f0 100%);
+}
+
+/* 저녁 (17~21시) */
+body.theme-evening {
+  background: radial-gradient(circle at top, #fed7aa 0, #f97316 40%, #1e293b 100%);
+}
+
+/* 밤 (21~05시) */
+body.theme-night {
+  background: radial-gradient(circle at top, #020617 0, #0f172a 40%, #1e293b 100%);
+}
