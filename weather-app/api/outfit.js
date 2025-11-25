@@ -1,6 +1,6 @@
 // api/outfit.js
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
-const GEMINI_MODEL = "gemini-2.5-flash-lite";
+const GEMINI_MODEL = "gemini-2.0-flash-lite";
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
