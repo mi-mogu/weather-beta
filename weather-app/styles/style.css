@@ -836,14 +836,3 @@ body.theme-night .weather-desc {
   }
 }
 
-/* 비 효과 활성화 시 배경 어둡게 */
-.effect-rain ~ .app,
-body:has(.effect-rain) {
-  filter: brightness(0.92);
-}
-
-/* 눈 효과 활성화 시 약간 밝게 */
-.effect-snow ~ .app {
-  filter: brightness(1.02);
-}
-
