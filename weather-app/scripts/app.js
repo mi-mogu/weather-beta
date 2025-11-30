@@ -9,6 +9,7 @@ const weatherImageEl = document.querySelector(".weather-image");
 const outfitTextEl = document.getElementById("outfit-text");
 const translatedCityEl = document.getElementById("translated-city");
 const cityLocalTimeEl = document.getElementById("city-local-time");
+const weatherEffectsEl = document.getElementById("weather-effects");
 
 // 모드 인디케이터(AI / 기본)
 const modeAiEl = document.getElementById("mode-ai");
@@ -38,7 +39,63 @@ function setOutfitMode(mode) {
 }
 // 처음에는 아무 색도 안 들어온 상태 (호출 X)
 
-// ==== 1.5. 시간에 따른 배경 테마 적용 ====
+// ==== 1.5. 날씨 효과 (비/눈) ====
+function applyWeatherEffect(conditionCode) {
+  if (!weatherEffectsEl) return;
+  
+  // 기존 효과 제거
+  weatherEffectsEl.innerHTML = "";
+  weatherEffectsEl.className = "weather-effects";
+  
+  // WeatherAPI condition codes:
+  // 비: 1063, 1180, 1183, 1186, 1189, 1192, 1195, 1240, 1243, 1246, 1273, 1276
+  // 눈: 1066, 1114, 1117, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258, 1279, 1282
+  // 진눈깨비: 1069, 1072, 1168, 1171, 1198, 1201, 1204, 1207, 1237, 1249, 1252
+  
+  const rainCodes = [1063, 1150, 1153, 1180, 1183, 1186, 1189, 1192, 1195, 1240, 1243, 1246, 1273, 1276];
+  const snowCodes = [1066, 1114, 1117, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258, 1279, 1282];
+  const sleetCodes = [1069, 1072, 1168, 1171, 1198, 1201, 1204, 1207, 1237, 1249, 1252];
+  
+  let effectType = null;
+  let particleCount = 50;
+  
+  if (rainCodes.includes(conditionCode)) {
+    effectType = "rain";
+    particleCount = 80;
+  } else if (snowCodes.includes(conditionCode)) {
+    effectType = "snow";
+    particleCount = 60;
+  } else if (sleetCodes.includes(conditionCode)) {
+    effectType = "sleet";
+    particleCount = 50;
+  }
+  
+  if (!effectType) return;
+  
+  weatherEffectsEl.classList.add(`effect-${effectType}`);
+  
+  // 파티클 생성
+  for (let i = 0; i < particleCount; i++) {
+    const particle = document.createElement("div");
+    particle.className = `particle particle-${effectType}`;
+    
+    // 랜덤 위치 및 애니메이션 지연
+    particle.style.left = `${Math.random() * 100}%`;
+    particle.style.animationDelay = `${Math.random() * 2}s`;
+    particle.style.animationDuration = effectType === "snow" 
+      ? `${3 + Math.random() * 4}s` 
+      : `${0.5 + Math.random() * 0.5}s`;
+    
+    if (effectType === "snow") {
+      particle.style.opacity = `${0.4 + Math.random() * 0.6}`;
+      particle.style.transform = `scale(${0.5 + Math.random() * 1})`;
+    }
+    
+    weatherEffectsEl.appendChild(particle);
+  }
+}
+
+// ==== 1.6. 시간에 따른 배경 테마 적용 ====
 function applyTimeTheme(localtime) {
   // localtime 형식: "2024-01-15 14:30"
   const timePart = localtime.split(" ")[1]; // "14:30"
@@ -330,6 +387,10 @@ function renderWeather(data, displayCity) {
 
     hourlyListEl.innerHTML = hourlyItemsHtml;
   }
+
+  // 6) 날씨 효과 적용 (비/눈)
+  const conditionCode = data.current.condition.code;
+  applyWeatherEffect(conditionCode);
 
   // handleSearch에서 쓰도록 현재 온도와 설명 반환
   return { currentTemp, conditionText };
