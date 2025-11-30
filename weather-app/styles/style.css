@@ -1,459 +1,746 @@
-/* ============ 기본 리셋 ============ */
-* {
+/* ============ CSS Variables ============ */
+:root {
+  --bg-default: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --radius-xl: 24px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --glass: rgba(255, 255, 255, 0.1);
+}
+
+/* ============ Reset ============ */
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* ============ 전체 레이아웃 ============ */
+/* ============ Body & Layout ============ */
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Noto Sans KR", sans-serif;
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 
+    'Noto Sans KR', sans-serif;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 20px;
-  background: #e5e7eb; /* JS가 테마 적용하기 전 기본 배경 */
-  transition: background 0.6s ease;
+  padding: 24px;
+  background: var(--bg-default);
+  transition: background var(--transition), filter var(--transition);
+  overflow-x: hidden;
 }
 
-/* 앱 컨테이너 */
+/* ============ App Container ============ */
 .app {
   width: 100%;
-  max-width: 480px;
-  background: rgba(255, 255, 255, 0.96);
-  border-radius: 18px;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
-  padding: 24px 20px 28px;
-  backdrop-filter: blur(10px);
+  max-width: 520px;
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--card-shadow);
+  padding: 32px 28px;
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: slideUp 0.6s ease-out;
 }
 
-/* ============ 헤더 ============ */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============ Header ============ */
 .header {
   text-align: center;
-  margin-bottom: 18px;
+  margin-bottom: 24px;
 }
 
 .header h1 {
-  font-size: 1.7rem;
+  font-size: 2rem;
   font-weight: 800;
-  color: #0f172a;
+  background: linear-gradient(135deg, var(--accent), #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
 }
 
 .subtitle {
-  margin-top: 4px;
-  font-size: 0.85rem;
-  color: #64748b;
+  margin-top: 8px;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
 }
 
-/* ============ 검색 영역 ============ */
+/* ============ Search Section ============ */
 .search-section {
   display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 #city-input {
   flex: 1;
-  padding: 10px 12px;
+  padding: 14px 20px;
   border-radius: 999px;
-  border: 1px solid #cbd5f5;
-  font-size: 0.95rem;
+  border: 2px solid transparent;
+  font-size: 1rem;
+  background: linear-gradient(#f8fafc, #f8fafc) padding-box,
+              linear-gradient(135deg, #e0e7ff, #fce7f3) border-box;
   outline: none;
-  background: #f9fafb;
+  transition: all var(--transition);
 }
 
 #city-input::placeholder {
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 #city-input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-  background: #ffffff;
+  background: linear-gradient(#fff, #fff) padding-box,
+              linear-gradient(135deg, var(--accent), #ec4899) border-box;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
 }
 
 #search-btn {
-  padding: 10px 16px;
+  padding: 14px 24px;
   border-radius: 999px;
   border: none;
-  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
   color: white;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
-  white-space: nowrap;
-  font-size: 0.95rem;
+  transition: all var(--transition);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
 }
 
 #search-btn:hover {
-  background: linear-gradient(135deg, #2563eb, #4f46e5);
-  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
 }
 
-/* 번역된 도시 표시 */
+#search-btn:active {
+  transform: translateY(0);
+}
+
+/* ============ Translated City ============ */
 .translated-city {
-  font-size: 0.85rem;
-  color: #64748b;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
   text-align: center;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  padding: 8px 16px;
+  background: rgba(99, 102, 241, 0.08);
+  border-radius: var(--radius-md);
 }
 
-/* ============ 최근 검색 기록 ============ */
+/* ============ History Section ============ */
 .history-section {
-  background: #f9fafb;
-  border-radius: 12px;
-  padding: 8px 10px;
-  border: 1px solid #e5e7eb;
-  margin-bottom: 12px;
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .history-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
 .history-title {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #6b7280;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .history-clear-btn {
-  font-size: 0.75rem;
-  padding: 3px 8px;
+  font-size: 0.8rem;
+  padding: 6px 12px;
   border-radius: 999px;
   border: none;
-  background: #fee2e2;
-  color: #b91c1c;
+  background: linear-gradient(135deg, #fef2f2, #fee2e2);
+  color: #dc2626;
+  font-weight: 600;
   cursor: pointer;
+  transition: all var(--transition);
 }
 
 .history-clear-btn:hover {
   background: #fecaca;
+  transform: scale(1.05);
 }
 
 .history-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  min-height: 22px;
+  gap: 8px;
 }
 
 .history-empty {
-  font-size: 0.8rem;
-  color: #9ca3af;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
-/* 개별 히스토리 아이템 */
 .history-item {
   display: flex;
   align-items: center;
   border-radius: 999px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
+  background: white;
   overflow: hidden;
-  box-shadow: 0 3px 6px rgba(148, 163, 184, 0.35);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all var(--transition);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.history-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 .history-term {
   border: none;
   background: transparent;
-  padding: 4px 8px 4px 10px;
-  font-size: 0.8rem;
-  color: #374151;
+  padding: 8px 12px 8px 14px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
   cursor: pointer;
-}
-
-.history-term:hover {
-  background: #eff6ff;
+  font-weight: 500;
 }
 
 .history-delete {
   border: none;
   background: transparent;
-  padding: 4px 6px;
-  font-size: 0.8rem;
-  color: #9ca3af;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
   cursor: pointer;
+  transition: color var(--transition);
 }
 
 .history-delete:hover {
   color: #ef4444;
 }
 
-/* ============ 결과 섹션 전체 ============ */
+/* ============ Result Section ============ */
 .result-section {
-  margin-top: 4px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
-/* 섹션 공통 제목 */
+/* ============ Section Title ============ */
 .section-title {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 12px;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 16px;
 }
 
 .section-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 999px;
-  background: #3b82f6;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
 }
 
 .section-dot--warm {
-  background: #f97316;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
 }
 
-/* 도시 이름 제목 ("서울의 날씨") */
+/* ============ City Name & Time ============ */
 .city-name-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #0f172a;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text-primary);
   margin-bottom: 8px;
-  text-align: left;
 }
 
-/* ============ 날씨 카드 ============ */
+.city-time-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #eef2ff, #fdf4ff);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.time-icon {
+  font-size: 1.2rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.local-time {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* ============ Weather Card ============ */
 .weather-card {
-  background: linear-gradient(145deg, #e0f2fe, #f9fafb);
-  border-radius: 16px;
-  padding: 16px 16px 18px;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  border-radius: var(--radius-lg);
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.5);
+  gap: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 
-/* 날씨 이미지 자리 */
+.weather-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+}
+
+/* ============ Weather Image ============ */
 .weather-image {
-  height: 120px;
-  border-radius: 14px;
-  background: radial-gradient(circle at top, #bfdbfe 0, #eff6ff 60%, #e5e7eb 100%);
+  height: 140px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 50%, #fae8ff 100%);
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.weather-image::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+  animation: shimmer 3s infinite linear;
+}
+
+@keyframes shimmer {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .placeholder-text {
-  color: #64748b;
-  font-size: 0.9rem;
-}
-
-/* 현재 / 미래 / 시간별 제목 */
-.current-temp h3,
-.future-temp h3,
-.hourly-temp h3 {
+  color: var(--text-secondary);
   font-size: 0.95rem;
-  color: #0f172a;
-  margin-bottom: 4px;
+  font-weight: 500;
+  z-index: 1;
 }
 
-/* 현재 온도 값 */
-.temp-value {
-  font-size: 2.1rem;
-  font-weight: 800;
-  color: #1d4ed8;
-}
-
-/* 미래 온도 리스트 (일별) */
-.future-temp-list {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.future-temp-item {
-  flex: 1 1 30%;
-  min-width: 90px;
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 8px 10px;
-  text-align: center;
-  box-shadow: 0 6px 12px rgba(148, 163, 184, 0.35);
-  border: 1px solid rgba(148, 163, 184, 0.4);
-}
-
-.future-temp-item .label {
-  font-size: 0.8rem;
-  color: #64748b;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.future-temp-item .value {
-  font-weight: 600;
-  color: #0f172a;
-}
-
-/* 날씨 아이콘 */
 .weather-icon-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
+  z-index: 1;
 }
 
 .weather-icon {
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  transition: transform 0.5s ease;
+}
+
+.weather-icon:hover {
+  transform: scale(1.1) rotate(-5deg);
 }
 
 .weather-desc {
-  font-size: 0.9rem;
-  color: #475569;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
-/* ============ 시간별 날씨 (1~3시간 후) ============ */
+/* ============ Current Temp ============ */
+.current-temp h3,
+.future-temp h3,
+.hourly-temp h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.temp-value {
+  font-size: 3rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent), #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+/* ============ Future Temp List ============ */
+.future-temp-list {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.future-temp-item {
+  flex: 1 1 calc(33.333% - 8px);
+  min-width: 100px;
+  background: linear-gradient(145deg, #ffffff, #f1f5f9);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  transition: all var(--transition);
+}
+
+.future-temp-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.future-temp-item .label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.future-temp-item .value {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+/* ============ Hourly Temp ============ */
 .hourly-temp {
   margin-top: 4px;
 }
 
 .hourly-list {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .hourly-item {
-  flex: 1 1 30%;
-  min-width: 90px;
-  background: #eff6ff;
-  border-radius: 12px;
-  padding: 8px 10px;
+  flex: 1 1 calc(33.333% - 8px);
+  min-width: 100px;
+  background: linear-gradient(145deg, #eef2ff, #fdf4ff);
+  border-radius: var(--radius-md);
+  padding: 14px;
   text-align: center;
-  box-shadow: 0 6px 12px rgba(148, 163, 184, 0.35);
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.08);
+  transition: all var(--transition);
+}
+
+.hourly-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
 }
 
 .hourly-item .label {
   display: block;
-  font-size: 0.78rem;
-  color: #64748b;
-  margin-bottom: 4px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
 .hourly-item .value {
   display: block;
-  font-weight: 600;
-  color: #0f172a;
-  margin-top: 4px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  margin-top: 8px;
 }
 
 .hourly-icon {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
-/* ============ 옷차림 추천 카드 ============ */
+/* ============ Outfit Section ============ */
 .outfit-section {
-  border-radius: 16px;
-  padding: 16px 16px 18px;
-  background: linear-gradient(145deg, #fef9c3, #fff7ed);
-  border: 1px solid #facc15;
-  box-shadow: 0 10px 22px rgba(250, 204, 21, 0.35);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  background: linear-gradient(145deg, #fefce8, #fef9c3);
+  border: 1px solid rgba(250, 204, 21, 0.3);
+  box-shadow: 0 10px 40px rgba(250, 204, 21, 0.15);
+  transition: all var(--transition);
 }
 
-/* AI / 기본 모드 인디케이터 */
+.outfit-section:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(250, 204, 21, 0.2);
+}
+
 .outfit-mode-indicator {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .mode-label {
-  font-size: 0.8rem;
-  color: #6b7280;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #92400e;
 }
 
 .mode-pills {
   display: flex;
-  gap: 6px;
+  gap: 8px;
 }
 
-/* 기본 pill 스타일 */
 .mode-pill {
-  font-size: 0.75rem;
-  padding: 4px 10px;
+  font-size: 0.8rem;
+  padding: 6px 14px;
   border-radius: 999px;
-  border: 1px solid #d4d4d8;
-  color: #6b7280;
-  background: #f9fafb;
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.2);
-  transition: background 0.15s ease, color 0.15s ease,
-    box-shadow 0.15s ease, border-color 0.15s ease;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: var(--text-secondary);
+  background: white;
+  font-weight: 600;
+  transition: all var(--transition);
 }
 
-/* "불 들어온" 상태 (AI / 기본 활성화 표시) */
 .mode-pill--active {
-  background: #22c55e !important;
-  color: #f9fafb !important;
-  border-color: #16a34a !important;
-  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.4) !important;
+  background: linear-gradient(135deg, var(--success), #059669) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
 }
 
 #outfit-text {
-  font-size: 0.95rem;
-  color: #6b21a8;
-  line-height: 1.4;
-  margin-top: 4px;
+  font-size: 1rem;
+  color: #7c2d12;
+  line-height: 1.6;
+  font-weight: 500;
 }
 
-/* ============ 시간대별 배경 테마 ============ */
-/* 아침 (05~11시) */
+/* ============ Time-Based Themes ============ */
+
+/* 새벽 (5~7시) - 부드러운 분홍빛 */
+body.theme-dawn {
+  background: linear-gradient(
+    135deg,
+    #fce7f3 0%,
+    #fbcfe8 30%,
+    #f9a8d4 60%,
+    #c4b5fd 100%
+  ) !important;
+}
+
+/* 아침 (7~11시) - 밝은 노란빛 */
 body.theme-morning {
-  background: radial-gradient(
-    circle at top,
-    #fee2e2 0,
-    #fef9c3 40%,
-    #bfdbfe 100%
+  background: linear-gradient(
+    135deg,
+    #fef9c3 0%,
+    #fde68a 30%,
+    #fbbf24 60%,
+    #fb923c 100%
   ) !important;
 }
 
-/* 낮 (11~17시) */
+/* 낮 (11~17시) - 맑은 하늘색 */
 body.theme-day {
-  background: radial-gradient(
-    circle at top,
-    #dbeafe 0,
-    #eff6ff 40%,
-    #e2e8f0 100%
+  background: linear-gradient(
+    135deg,
+    #e0f2fe 0%,
+    #7dd3fc 30%,
+    #38bdf8 60%,
+    #0ea5e9 100%
   ) !important;
 }
 
-/* 저녁 (17~21시) */
+/* 일몰 (17~19시) - 주황빛 석양 */
+body.theme-sunset {
+  background: linear-gradient(
+    135deg,
+    #fed7aa 0%,
+    #fdba74 30%,
+    #fb923c 50%,
+    #f97316 70%,
+    #ea580c 100%
+  ) !important;
+}
+
+/* 저녁 (19~21시) - 보라빛 황혼 */
 body.theme-evening {
-  background: radial-gradient(
-    circle at top,
-    #fed7aa 0,
-    #f97316 40%,
-    #1e293b 100%
+  background: linear-gradient(
+    135deg,
+    #c4b5fd 0%,
+    #a78bfa 30%,
+    #8b5cf6 50%,
+    #6d28d9 70%,
+    #4c1d95 100%
   ) !important;
 }
 
-/* 밤 (21~05시) */
+/* 밤 (21~5시) - 어두운 남색 */
 body.theme-night {
-  background: radial-gradient(
-    circle at top,
-    #020617 0,
-    #0f172a 40%,
-    #1e293b 100%
+  background: linear-gradient(
+    135deg,
+    #1e293b 0%,
+    #0f172a 30%,
+    #020617 60%,
+    #000000 100%
   ) !important;
 }
 
-/* ============ 모바일 반응형 ============ */
-@media (max-width: 480px) {
+/* 밤 테마일 때 앱 카드 스타일 조정 */
+body.theme-night .app {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.theme-night .header h1 {
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-night .city-name-title,
+body.theme-night .section-title,
+body.theme-night .current-temp h3,
+body.theme-night .future-temp h3,
+body.theme-night .hourly-temp h3 {
+  color: #e2e8f0;
+}
+
+body.theme-night .subtitle,
+body.theme-night .translated-city {
+  color: #94a3b8;
+}
+
+body.theme-night .weather-card {
+  background: linear-gradient(145deg, #334155, #1e293b);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.theme-night .history-section {
+  background: linear-gradient(135deg, #334155, #1e293b);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.theme-night .history-title {
+  color: #cbd5e1;
+}
+
+body.theme-night .history-item {
+  background: #475569;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.theme-night .history-term {
+  color: #f1f5f9;
+}
+
+body.theme-night .future-temp-item,
+body.theme-night .hourly-item {
+  background: linear-gradient(145deg, #475569, #334155);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.theme-night .future-temp-item .value,
+body.theme-night .hourly-item .value {
+  color: #f1f5f9;
+}
+
+body.theme-night .future-temp-item .label,
+body.theme-night .hourly-item .label {
+  color: #94a3b8;
+}
+
+body.theme-night .local-time {
+  color: #a5b4fc;
+}
+
+body.theme-night .city-time-display {
+  background: linear-gradient(135deg, #334155, #3b4252);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.theme-night .weather-image {
+  background: linear-gradient(135deg, #475569 0%, #334155 50%, #1e293b 100%);
+}
+
+body.theme-night .placeholder-text,
+body.theme-night .weather-desc {
+  color: #cbd5e1;
+}
+
+/* ============ Responsive ============ */
+@media (max-width: 520px) {
+  body {
+    padding: 16px;
+  }
+  
   .app {
-    padding: 20px 16px 24px;
+    padding: 24px 20px;
+    border-radius: var(--radius-lg);
+  }
+  
+  .header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .search-section {
+    flex-direction: column;
+  }
+  
+  #search-btn {
+    width: 100%;
+  }
+  
+  .future-temp-item,
+  .hourly-item {
+    flex: 1 1 calc(50% - 6px);
+    min-width: 0;
+  }
+  
+  .temp-value {
+    font-size: 2.4rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .future-temp-item,
+  .hourly-item {
+    flex: 1 1 100%;
   }
 }

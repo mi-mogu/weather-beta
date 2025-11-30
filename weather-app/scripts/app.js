@@ -8,6 +8,7 @@ const hourlyListEl = document.getElementById("hourly-list");
 const weatherImageEl = document.querySelector(".weather-image");
 const outfitTextEl = document.getElementById("outfit-text");
 const translatedCityEl = document.getElementById("translated-city");
+const cityLocalTimeEl = document.getElementById("city-local-time");
 
 // 모드 인디케이터(AI / 기본)
 const modeAiEl = document.getElementById("mode-ai");
@@ -36,6 +37,55 @@ function setOutfitMode(mode) {
   }
 }
 // 처음에는 아무 색도 안 들어온 상태 (호출 X)
+
+// ==== 1.5. 시간에 따른 배경 테마 적용 ====
+function applyTimeTheme(localtime) {
+  // localtime 형식: "2024-01-15 14:30"
+  const timePart = localtime.split(" ")[1]; // "14:30"
+  const hour = parseInt(timePart.split(":")[0], 10);
+  
+  // 기존 테마 클래스 제거
+  document.body.classList.remove(
+    "theme-dawn",
+    "theme-morning", 
+    "theme-day", 
+    "theme-sunset",
+    "theme-evening", 
+    "theme-night"
+  );
+  
+  // 시간대별 테마 적용 (더 세분화)
+  if (hour >= 5 && hour < 7) {
+    document.body.classList.add("theme-dawn");     // 새벽 (5~7시)
+  } else if (hour >= 7 && hour < 11) {
+    document.body.classList.add("theme-morning");  // 아침 (7~11시)
+  } else if (hour >= 11 && hour < 17) {
+    document.body.classList.add("theme-day");      // 낮 (11~17시)
+  } else if (hour >= 17 && hour < 19) {
+    document.body.classList.add("theme-sunset");   // 일몰 (17~19시)
+  } else if (hour >= 19 && hour < 21) {
+    document.body.classList.add("theme-evening");  // 저녁 (19~21시)
+  } else {
+    document.body.classList.add("theme-night");    // 밤 (21~5시)
+  }
+}
+
+// ==== 1.6. 도시 현지 시간 표시 ====
+function displayCityLocalTime(localtime) {
+  if (!cityLocalTimeEl) return;
+  
+  // localtime 형식: "2024-01-15 14:30"
+  const [datePart, timePart] = localtime.split(" ");
+  const [year, month, day] = datePart.split("-");
+  const [hour, minute] = timePart.split(":");
+  
+  const hourNum = parseInt(hour, 10);
+  const ampm = hourNum >= 12 ? "오후" : "오전";
+  const hour12 = hourNum % 12 || 12;
+  
+  const formattedTime = `${month}월 ${day}일 ${ampm} ${hour12}:${minute}`;
+  cityLocalTimeEl.textContent = `현지 시간: ${formattedTime}`;
+}
 
 // ==== 2. 최근 검색 히스토리 ====
 function renderHistory() {
@@ -332,6 +382,11 @@ async function handleSearch(initialInput) {
 
     // 3) 화면 렌더링 (현재 온도, 날씨 설명 받아오기) — 화면엔 "서울의 날씨"처럼 한글 도시 사용
     const { currentTemp, conditionText } = renderWeather(data, userInput);
+
+    // 🔹 도시 현지 시간 표시 및 테마 적용
+    const localtime = data.location.localtime;
+    displayCityLocalTime(localtime);
+    applyTimeTheme(localtime);
 
     // 🔹 최근 검색 기록에 추가
     addToHistory(userInput);
