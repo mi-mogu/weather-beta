@@ -362,25 +362,49 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   z-index: 1;
 }
 
 .weather-icon {
-  width: 90px;
-  height: 90px;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-  transition: transform 0.5s ease;
+  width: 100px;
+  height: 100px;
+  filter: drop-shadow(0 8px 20px rgba(99, 102, 241, 0.3))
+         drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: iconFloat 3s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 .weather-icon:hover {
-  transform: scale(1.1) rotate(-5deg);
+  transform: scale(1.15) rotate(-8deg);
+  animation-play-state: paused;
 }
 
 .weather-desc {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-secondary);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding: 6px 16px;
+  border-radius: 999px;
+  position: relative;
+}
+
+.weather-desc::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  border-radius: 999px;
+  z-index: -1;
 }
 
 /* ============ Current Temp ============ */
@@ -488,9 +512,26 @@ body {
 }
 
 .hourly-icon {
-  width: 40px;
-  height: 40px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  width: 44px;
+  height: 44px;
+  filter: drop-shadow(0 4px 8px rgba(99, 102, 241, 0.25));
+  transition: transform 0.3s ease;
+  animation: iconBounce 2s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.2s);
+}
+
+.hourly-item:nth-child(1) .hourly-icon { --i: 0; }
+.hourly-item:nth-child(2) .hourly-icon { --i: 1; }
+.hourly-item:nth-child(3) .hourly-icon { --i: 2; }
+
+@keyframes iconBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.hourly-item:hover .hourly-icon {
+  transform: scale(1.2);
+  animation-play-state: paused;
 }
 
 /* ============ Outfit Section ============ */
@@ -705,7 +746,25 @@ body.theme-night .weather-desc {
 }
 
 /* ============ Responsive ============ */
-@media (max-width: 520px) {
+
+/* 태블릿 세로 및 큰 모바일 (768px 이하) */
+@media (max-width: 768px) {
+  body {
+    padding: 20px;
+  }
+  
+  .app {
+    max-width: 100%;
+    padding: 28px 24px;
+  }
+  
+  .header h1 {
+    font-size: 1.8rem;
+  }
+}
+
+/* 일반 모바일 (576px 이하) */
+@media (max-width: 576px) {
   body {
     padding: 16px;
   }
@@ -719,12 +778,37 @@ body.theme-night .weather-desc {
     font-size: 1.6rem;
   }
   
+  .subtitle {
+    font-size: 0.9rem;
+  }
+  
   .search-section {
     flex-direction: column;
+    gap: 10px;
+  }
+  
+  #city-input {
+    padding: 14px 18px;
+    font-size: 16px; /* iOS 줌 방지 */
   }
   
   #search-btn {
     width: 100%;
+    padding: 14px 20px;
+    min-height: 48px;
+  }
+  
+  .weather-card {
+    padding: 20px;
+  }
+  
+  .weather-image {
+    height: 135px;
+  }
+  
+  .weather-icon {
+    width: 90px;
+    height: 90px;
   }
   
   .future-temp-item,
@@ -734,14 +818,413 @@ body.theme-night .weather-desc {
   }
   
   .temp-value {
-    font-size: 2.4rem;
+    font-size: 2.5rem;
   }
 }
 
+/* 작은 모바일 (480px 이하) */
+@media (max-width: 480px) {
+  body {
+    padding: 12px;
+  }
+  
+  .app {
+    padding: 20px 16px;
+  }
+  
+  .header h1 {
+    font-size: 1.45rem;
+  }
+  
+  .subtitle {
+    font-size: 0.85rem;
+  }
+  
+  .translated-city {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+  }
+  
+  .history-section {
+    padding: 12px;
+  }
+  
+  .history-list {
+    gap: 8px;
+  }
+  
+  .history-item {
+    min-height: 44px;
+  }
+  
+  .history-term {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .history-delete {
+    padding: 10px;
+    font-size: 1rem;
+  }
+  
+  .history-clear-btn {
+    min-height: 36px;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+  
+  .weather-card {
+    padding: 16px;
+    gap: 14px;
+  }
+  
+  .section-title {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+  
+  .city-name-title {
+    font-size: 1.15rem;
+  }
+  
+  .city-time-display {
+    padding: 8px 12px;
+    margin-bottom: 12px;
+  }
+  
+  .local-time {
+    font-size: 0.9rem;
+  }
+  
+  .weather-image {
+    height: 120px;
+  }
+  
+  .weather-icon {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .weather-desc {
+    font-size: 0.95rem;
+    padding: 5px 12px;
+  }
+  
+  .temp-value {
+    font-size: 2.2rem;
+  }
+  
+  .future-temp-item,
+  .hourly-item {
+    padding: 12px 10px;
+  }
+  
+  .future-temp-item .label,
+  .hourly-item .label {
+    font-size: 0.75rem;
+  }
+  
+  .future-temp-item .value,
+  .hourly-item .value {
+    font-size: 1rem;
+  }
+  
+  .hourly-icon {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .outfit-section {
+    padding: 16px;
+  }
+  
+  .mode-label {
+    font-size: 0.8rem;
+  }
+  
+  .mode-pill {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+  }
+  
+  #outfit-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}
+
+/* 매우 작은 모바일 (400px 이하) */
+@media (max-width: 400px) {
+  body {
+    padding: 10px;
+  }
+  
+  .app {
+    padding: 18px 14px;
+  }
+  
+  .header h1 {
+    font-size: 1.35rem;
+  }
+  
+  .subtitle {
+    font-size: 0.8rem;
+  }
+  
+  .search-section {
+    gap: 8px;
+  }
+  
+  #city-input {
+    padding: 12px 16px;
+  }
+  
+  #search-btn {
+    padding: 12px 18px;
+    min-height: 46px;
+  }
+  
+  .history-title {
+    font-size: 0.8rem;
+  }
+  
+  .city-name-title {
+    font-size: 1.1rem;
+  }
+  
+  .weather-image {
+    height: 110px;
+  }
+  
+  .weather-icon {
+    width: 72px;
+    height: 72px;
+  }
+  
+  .temp-value {
+    font-size: 2rem;
+  }
+  
+  .future-temp-item,
+  .hourly-item {
+    flex: 1 1 calc(50% - 4px);
+    padding: 10px 8px;
+  }
+  
+  .hourly-icon {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+/* 최소 모바일 (360px 이하) */
 @media (max-width: 360px) {
+  body {
+    padding: 8px;
+  }
+  
+  .app {
+    padding: 16px 12px;
+    border-radius: var(--radius-md);
+  }
+  
+  .header {
+    margin-bottom: 16px;
+  }
+  
+  .header h1 {
+    font-size: 1.25rem;
+  }
+  
+  .subtitle {
+    font-size: 0.75rem;
+    margin-top: 4px;
+  }
+  
+  #city-input {
+    padding: 11px 14px;
+    font-size: 15px;
+  }
+  
+  #search-btn {
+    padding: 11px 16px;
+    min-height: 44px;
+    font-size: 0.95rem;
+  }
+  
+  .translated-city {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    margin-bottom: 8px;
+  }
+  
+  .history-section {
+    padding: 10px;
+    margin-bottom: 14px;
+  }
+  
+  .history-header {
+    margin-bottom: 8px;
+  }
+  
+  .history-term {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .history-delete {
+    padding: 8px;
+  }
+  
+  .result-section {
+    gap: 14px;
+  }
+  
+  .section-title {
+    font-size: 0.95rem;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .section-dot {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .city-name-title {
+    font-size: 1rem;
+  }
+  
+  .city-time-display {
+    padding: 7px 10px;
+    gap: 6px;
+  }
+  
+  .time-icon {
+    font-size: 1rem;
+  }
+  
+  .local-time {
+    font-size: 0.85rem;
+  }
+  
+  .weather-card {
+    padding: 14px;
+    gap: 12px;
+  }
+  
+  .weather-image {
+    height: 100px;
+    border-radius: var(--radius-md);
+  }
+  
+  .weather-icon {
+    width: 65px;
+    height: 65px;
+  }
+  
+  .weather-desc {
+    font-size: 0.85rem;
+    padding: 4px 10px;
+  }
+  
+  .current-temp h3,
+  .future-temp h3,
+  .hourly-temp h3 {
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+  }
+  
+  .temp-value {
+    font-size: 1.8rem;
+  }
+  
+  .future-temp-list,
+  .hourly-list {
+    gap: 8px;
+  }
+  
   .future-temp-item,
   .hourly-item {
     flex: 1 1 100%;
+    padding: 10px;
+  }
+  
+  .future-temp-item .label,
+  .hourly-item .label {
+    font-size: 0.7rem;
+    margin-bottom: 4px;
+  }
+  
+  .future-temp-item .value,
+  .hourly-item .value {
+    font-size: 0.95rem;
+  }
+  
+  .hourly-icon {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .outfit-section {
+    padding: 14px;
+  }
+  
+  .outfit-mode-indicator {
+    margin-bottom: 10px;
+  }
+  
+  .mode-label {
+    font-size: 0.75rem;
+  }
+  
+  .mode-pills {
+    gap: 6px;
+  }
+  
+  .mode-pill {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+  
+  #outfit-text {
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
+}
+
+/* 초소형 모바일 (320px 이하) */
+@media (max-width: 320px) {
+  body {
+    padding: 6px;
+  }
+  
+  .app {
+    padding: 14px 10px;
+  }
+  
+  .header h1 {
+    font-size: 1.15rem;
+  }
+  
+  .weather-icon {
+    width: 58px;
+    height: 58px;
+  }
+  
+  .temp-value {
+    font-size: 1.6rem;
+  }
+  
+  #city-input {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  
+  #search-btn {
+    padding: 10px 14px;
+    min-height: 42px;
+    font-size: 0.9rem;
   }
 }
 
