@@ -1170,12 +1170,6 @@ body.theme-night .hourly-item {
     font-size: 0.85rem;
   }
   
-  .remove-location-btn {
-    width: 42px;
-    height: 42px;
-    font-size: 0.8rem;
-  }
-  
   .search-section {
     position: absolute;
     top: 32px;
@@ -1443,12 +1437,6 @@ body.theme-night .hourly-item {
     font-size: 0.8rem;
   }
   
-  .remove-location-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 0.75rem;
-  }
-  
   .search-section {
     position: absolute;
     top: 30px;
@@ -1713,12 +1701,6 @@ body.theme-night .hourly-item {
     font-size: 0.75rem;
   }
   
-  .remove-location-btn {
-    width: 38px;
-    height: 38px;
-    font-size: 0.7rem;
-  }
-  
   .search-section {
     position: absolute;
     top: 26px;
@@ -1894,12 +1876,6 @@ body.theme-night .hourly-item {
   .reset-icon {
     font-size: 0.9rem;
   }
-  
-  .remove-location-btn {
-    width: 34px;
-    height: 34px;
-    font-size: 0.8rem;
-  }
 }
 
 /* ?�반 모바??(576px ?�하) */
@@ -1949,11 +1925,6 @@ body.theme-night .hourly-item {
   
   .reset-icon {
     font-size: 0.9rem;
-  }
-  
-  .remove-location-btn {
-    width: 40px;
-    height: 40px;
   }
   
   .weather-summary {
@@ -2021,11 +1992,6 @@ body.theme-night .hourly-item {
   
   .reset-text {
     font-size: 0.75rem;
-  }
-  
-  .remove-location-btn {
-    width: 38px;
-    height: 38px;
   }
   
   .translated-city {
@@ -2201,12 +2167,6 @@ body.theme-night .hourly-item {
     font-size: 0.7rem;
   }
   
-  .remove-location-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 0.7rem;
-  }
-  
   #city-input {
     height: 44px;
     padding: 0 16px;
@@ -2289,12 +2249,6 @@ body.theme-night .hourly-item {
   }
   
   .reset-text {
-    font-size: 0.65rem;
-  }
-  
-  .remove-location-btn {
-    width: 34px;
-    height: 34px;
     font-size: 0.65rem;
   }
   
@@ -2475,11 +2429,6 @@ body.theme-night .hourly-item {
     height: 40px;
     justify-content: center;
     padding: 0 10px;
-  }
-  
-  .remove-location-btn {
-    width: 40px;
-    height: 40px;
   }
   
   .weather-icon {
