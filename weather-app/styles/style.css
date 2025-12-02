@@ -170,7 +170,17 @@ body::before {
 }
 
 .location-btn:active {
-  transform: scale(0.98);
+  transform: scale(0.95);
+  background: rgba(79, 195, 247, 0.25);
+  border-color: var(--accent-light);
+  box-shadow: 0 0 20px var(--accent-glow), inset 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.05s ease;
+}
+
+.location-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .location-icon {
@@ -515,11 +525,23 @@ body::before {
   height: 90px;
   filter: drop-shadow(0 4px 15px var(--accent-glow));
   animation: iconFloat 3s ease-in-out infinite;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  cursor: pointer;
+}
+
+.weather-icon:hover {
+  animation: iconFloatHover 3s ease-in-out infinite;
+  filter: drop-shadow(0 6px 25px var(--accent-glow));
 }
 
 @keyframes iconFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-5px) scale(1); }
+}
+
+@keyframes iconFloatHover {
+  0%, 100% { transform: translateY(0) scale(1.15); }
+  50% { transform: translateY(-5px) scale(1.15); }
 }
 
 .current-temp {
