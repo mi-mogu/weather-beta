@@ -607,17 +607,28 @@ function removeLocation() {
 
 // 좌표로 날씨 가져오기
 async function getForecastByCoords(lat, lon) {
-  const res = await fetch(
-    `/api/weather?lat=${lat}&lon=${lon}`
-  );
+  console.log("좌표로 날씨 요청:", lat, lon);
+  
+  try {
+    const res = await fetch(
+      `/api/weather?lat=${lat}&lon=${lon}`
+    );
 
-  if (!res.ok) {
-    console.error("WeatherAPI proxy error:", await res.text());
-    throw new Error("날씨 정보를 가져오지 못했습니다.");
+    console.log("API 응답 상태:", res.status);
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("WeatherAPI proxy error:", errorText);
+      throw new Error("날씨 정보를 가져오지 못했습니다.");
+    }
+
+    const data = await res.json();
+    console.log("날씨 데이터 수신 완료:", data.location?.name);
+    return data;
+  } catch (e) {
+    console.error("날씨 API 호출 오류:", e);
+    throw e;
   }
-
-  const data = await res.json();
-  return data;
 }
 
 // 위치 기반 날씨 처리
@@ -681,6 +692,15 @@ async function handleLocationWeather(lat, lon, displayCity) {
 
 // 현재 위치 가져오기
 function getCurrentLocation() {
+  // HTTPS 체크 (localhost 제외)
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const isSecure = window.location.protocol === 'https:';
+  
+  if (!isLocalhost && !isSecure) {
+    alert("위치 서비스는 HTTPS 환경에서만 사용할 수 있습니다.");
+    return;
+  }
+
   if (!navigator.geolocation) {
     alert("이 브라우저에서는 위치 서비스를 지원하지 않습니다.");
     return;
@@ -692,9 +712,12 @@ function getCurrentLocation() {
     locationBtn.disabled = true;
   }
 
+  console.log("위치 요청 시작...");
+
   navigator.geolocation.getCurrentPosition(
     async (position) => {
       const { latitude, longitude } = position.coords;
+      console.log("위치 획득 성공:", latitude, longitude);
       
       // 버튼 복구
       if (locationBtn) {
@@ -706,6 +729,8 @@ function getCurrentLocation() {
       await handleLocationWeather(latitude, longitude, null);
     },
     (error) => {
+      console.error("위치 오류:", error.code, error.message);
+      
       // 버튼 복구
       if (locationBtn) {
         locationBtn.innerHTML = '<span class="location-icon">📍</span><span class="location-text">현재 위치 날씨</span>';
@@ -715,20 +740,20 @@ function getCurrentLocation() {
       let message = "위치를 가져올 수 없습니다.";
       switch (error.code) {
         case error.PERMISSION_DENIED:
-          message = "위치 권한이 거부되었습니다. 브라우저 설정에서 허용해주세요.";
+          message = "위치 권한이 거부되었습니다.\n\n브라우저 주소창 왼쪽의 자물쇠/설정 아이콘을 클릭하여 위치 권한을 허용해주세요.";
           break;
         case error.POSITION_UNAVAILABLE:
-          message = "위치 정보를 사용할 수 없습니다.";
+          message = "위치 정보를 사용할 수 없습니다.\n\n기기의 위치 서비스가 켜져 있는지 확인해주세요.";
           break;
         case error.TIMEOUT:
-          message = "위치 요청 시간이 초과되었습니다.";
+          message = "위치 요청 시간이 초과되었습니다.\n\n다시 시도해주세요.";
           break;
       }
       alert(message);
     },
     {
       enableHighAccuracy: false,
-      timeout: 10000,
+      timeout: 15000,
       maximumAge: 300000 // 5분 캐시
     }
   );
