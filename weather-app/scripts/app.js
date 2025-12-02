@@ -239,9 +239,15 @@ async function translateCityNameToEnglish(koreanCity) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text: koreanCity }),
   });
-  if (!res.ok) throw new Error("번역 API 호출 실패");
   
   const data = await res.json();
+  
+  // 비속어/부적절한 입력 필터링 에러 처리
+  if (!res.ok) {
+    const errorMsg = data?.error || "번역 API 호출 실패";
+    throw new Error(errorMsg);
+  }
+  
   const english = data?.translatedCity?.trim();
   if (!english) throw new Error("번역 결과를 읽을 수 없습니다.");
   return english;
@@ -437,17 +443,33 @@ async function handleSearch(initialInput) {
     if (weatherCard) weatherCard.classList.add('loading');
   };
 
-  const setError = () => {
+  const setError = (errorMessage = null) => {
     const weatherCard = document.querySelector('.weather-card');
     if (weatherCard) weatherCard.classList.remove('loading');
     
-    if (cityName) cityName.textContent = "날씨 정보를 가져오지 못했습니다 😢";
+    // 에러 메시지 표시 (필터링 에러 등)
+    const displayMessage = errorMessage || "날씨 정보를 가져오지 못했습니다 😢";
+    const isFilterError = errorMessage?.includes("유효하지 않은");
+    
+    if (cityName) cityName.textContent = displayMessage;
     if (currentTempValue) currentTempValue.textContent = "--°";
     if (futureTempList) futureTempList.innerHTML = "";
     if (hourlyList) hourlyList.innerHTML = "";
-    if (weatherImage) weatherImage.innerHTML = '<span class="placeholder-text">오류 발생</span>';
-    if (outfitText) outfitText.textContent = "옷차림 추천을 불러오지 못했습니다.";
-    if (translatedCity) translatedCity.textContent = "번역된 도시: (불러오기 실패)";
+    if (weatherImage) {
+      weatherImage.innerHTML = isFilterError 
+        ? '<span class="placeholder-text">🚫</span>' 
+        : '<span class="placeholder-text">오류 발생</span>';
+    }
+    if (outfitText) {
+      outfitText.textContent = isFilterError 
+        ? "올바른 도시 이름을 입력해주세요." 
+        : "옷차림 추천을 불러오지 못했습니다.";
+    }
+    if (translatedCity) {
+      translatedCity.textContent = isFilterError 
+        ? "⚠️ 부적절한 입력이 감지되었습니다" 
+        : "번역된 도시: (불러오기 실패)";
+    }
     setOutfitMode(null);
   };
 
@@ -493,7 +515,7 @@ async function handleSearch(initialInput) {
     }
   } catch (err) {
     console.error(err);
-    setError();
+    setError(err.message);
   }
 }
 
