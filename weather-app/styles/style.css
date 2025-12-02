@@ -347,6 +347,33 @@ body::before {
               inset 0 1px 1px rgba(255, 255, 255, 0.1);
   transition: all var(--transition);
   border: 1px solid var(--glass-border);
+  animation: fadeSlideIn 0.3s ease-out;
+}
+
+.history-item.removing {
+  animation: fadeSlideOut 0.3s ease-out forwards;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
 }
 
 .history-item:hover {
@@ -378,6 +405,60 @@ body::before {
 
 .history-delete:hover {
   color: #f87171;
+}
+
+/* ============ Loading Spinner ============ */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--glass-border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.loading-text {
+  display: inline-flex;
+  align-items: center;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* 날씨 카드 로딩 상태 */
+.weather-card.loading {
+  position: relative;
+}
+
+.weather-card.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 /* ============ Result Section ============ */
