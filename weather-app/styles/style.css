@@ -1,21 +1,26 @@
-/* ============ CSS Variables ============ */
+/* ============ CSS Variables - Liquid Glass ============ */
 :root {
-  --bg-default: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --card-bg: rgba(255, 255, 255, 0.95);
-  --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --text-muted: #94a3b8;
-  --accent: #6366f1;
-  --accent-light: #818cf8;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --radius-xl: 24px;
-  --radius-lg: 16px;
-  --radius-md: 12px;
-  --radius-sm: 8px;
+  --bg-default: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-bg-strong: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-highlight: rgba(255, 255, 255, 0.25);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --glass-shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.4);
+  --glass-blur: blur(20px) saturate(180%);
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  --accent: #60a5fa;
+  --accent-light: #93c5fd;
+  --accent-glow: rgba(96, 165, 250, 0.4);
+  --success: #34d399;
+  --warning: #fbbf24;
+  --radius-xl: 28px;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
   --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  --glass: rgba(255, 255, 255, 0.1);
 }
 
 /* ============ Reset ============ */
@@ -27,7 +32,7 @@
 
 /* ============ Body & Layout ============ */
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 
     'Noto Sans KR', sans-serif;
   min-height: 100vh;
   display: flex;
@@ -35,31 +40,85 @@ body {
   align-items: flex-start;
   padding: 24px;
   background: var(--bg-default);
-  transition: background var(--transition), filter var(--transition);
+  transition: background var(--transition);
   overflow-x: hidden;
+  position: relative;
 }
 
-/* ============ App Container ============ */
+/* 배경 그라데이션 오브 */
+body::before {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: -10%;
+  width: 50%;
+  height: 50%;
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  animation: floatOrb 15s ease-in-out infinite;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -20%;
+  right: -10%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+  animation: floatOrb 20s ease-in-out infinite reverse;
+}
+
+@keyframes floatOrb {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -30px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+/* ============ App Container - Liquid Glass ============ */
 .app {
   width: 100%;
   max-width: 520px;
-  background: var(--card-bg);
+  background: var(--glass-bg);
   border-radius: var(--radius-xl);
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--glass-shadow-lg),
+              inset 0 1px 1px var(--glass-highlight),
+              inset 0 -1px 1px rgba(0, 0, 0, 0.1);
   padding: 32px 28px;
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  position: relative;
+  overflow: hidden;
   animation: slideUp 0.6s ease-out;
+  z-index: 1;
+}
+
+/* 상단 빛 반사 효과 */
+.app::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(255, 255, 255, 0.05) 30%,
+    transparent 100%);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  pointer-events: none;
 }
 
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(30px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -67,16 +126,19 @@ body {
 .header {
   text-align: center;
   margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
 }
 
 .header h1 {
   font-size: 2rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--accent), #ec4899);
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff 0%, var(--accent-light) 50%, var(--accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: -0.5px;
+  text-shadow: 0 0 40px var(--accent-glow);
 }
 
 .subtitle {
@@ -85,23 +147,29 @@ body {
   color: var(--text-secondary);
 }
 
-/* ============ Search Section ============ */
+/* ============ Search Section - Liquid Glass ============ */
 .search-section {
   display: flex;
   gap: 12px;
   margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
 }
 
 #city-input {
   flex: 1;
   padding: 14px 20px;
   border-radius: 999px;
-  border: 2px solid transparent;
+  border: 1px solid var(--glass-border);
   font-size: 1rem;
-  background: linear-gradient(#f8fafc, #f8fafc) padding-box,
-              linear-gradient(135deg, #e0e7ff, #fce7f3) border-box;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text-primary);
   outline: none;
   transition: all var(--transition);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1),
+              0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 #city-input::placeholder {
@@ -109,31 +177,48 @@ body {
 }
 
 #city-input:focus {
-  background: linear-gradient(#fff, #fff) padding-box,
-              linear-gradient(135deg, var(--accent), #ec4899) border-box;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+  background: var(--glass-bg-strong);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow),
+              inset 0 1px 1px rgba(255, 255, 255, 0.15),
+              0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 #search-btn {
   padding: 14px 24px;
   border-radius: 999px;
   border: none;
-  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  background: linear-gradient(135deg, var(--accent), #818cf8);
   color: white;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
   transition: all var(--transition);
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 20px var(--accent-glow),
+              inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+#search-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 100%);
+  border-radius: 999px 999px 0 0;
 }
 
 #search-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 30px var(--accent-glow),
+              inset 0 1px 1px rgba(255, 255, 255, 0.4);
 }
 
 #search-btn:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.98);
 }
 
 /* ============ Translated City ============ */
@@ -143,17 +228,27 @@ body {
   text-align: center;
   margin-bottom: 12px;
   padding: 8px 16px;
-  background: rgba(99, 102, 241, 0.08);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
   border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  position: relative;
+  z-index: 1;
 }
 
-/* ============ History Section ============ */
+/* ============ History Section - Liquid Glass ============ */
 .history-section {
-  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: var(--radius-lg);
   padding: 14px 16px;
   margin-bottom: 20px;
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow),
+              inset 0 1px 1px rgba(255, 255, 255, 0.08);
+  position: relative;
+  z-index: 1;
 }
 
 .history-header {
@@ -165,7 +260,7 @@ body {
 
 .history-title {
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -175,17 +270,19 @@ body {
   font-size: 0.8rem;
   padding: 6px 12px;
   border-radius: 999px;
-  border: none;
-  background: linear-gradient(135deg, #fef2f2, #fee2e2);
-  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition);
+  backdrop-filter: blur(5px);
 }
 
 .history-clear-btn:hover {
-  background: #fecaca;
+  background: rgba(239, 68, 68, 0.25);
   transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
 }
 
 .history-list {
@@ -203,16 +300,20 @@ body {
   display: flex;
   align-items: center;
   border-radius: 999px;
-  background: white;
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(10px);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15),
+              inset 0 1px 1px rgba(255, 255, 255, 0.1);
   transition: all var(--transition);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--glass-border);
 }
 
 .history-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2),
+              inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  background: var(--glass-highlight);
 }
 
 .history-term {
@@ -236,7 +337,7 @@ body {
 }
 
 .history-delete:hover {
-  color: #ef4444;
+  color: #f87171;
 }
 
 /* ============ Result Section ============ */
@@ -244,6 +345,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  position: relative;
+  z-index: 1;
 }
 
 /* ============ Section Title ============ */
@@ -252,7 +355,7 @@ body {
   align-items: center;
   gap: 10px;
   font-size: 1.1rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 16px;
 }
@@ -261,19 +364,25 @@ body {
   width: 10px;
   height: 10px;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--accent), #8b5cf6);
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  box-shadow: 0 0 15px var(--accent-glow);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { box-shadow: 0 0 15px var(--accent-glow); }
+  50% { box-shadow: 0 0 25px var(--accent-glow), 0 0 35px var(--accent-glow); }
 }
 
 .section-dot--warm {
-  background: linear-gradient(135deg, #f59e0b, #ef4444);
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+  background: linear-gradient(135deg, #fbbf24, #f97316);
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
 }
 
 /* ============ City Name & Time ============ */
 .city-name-title {
   font-size: 1.3rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 8px;
 }
@@ -283,10 +392,12 @@ body {
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  background: linear-gradient(135deg, #eef2ff, #fdf4ff);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
   border-radius: var(--radius-md);
   margin-bottom: 16px;
-  border: 1px solid rgba(99, 102, 241, 0.1);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
 }
 
 .time-icon {
@@ -302,51 +413,78 @@ body {
 .local-time {
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--accent-light);
 }
 
-/* ============ Weather Card ============ */
+/* ============ Weather Card - Liquid Glass ============ */
 .weather-card {
-  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border-radius: var(--radius-lg);
   padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow),
+              inset 0 1px 1px rgba(255, 255, 255, 0.1);
   transition: transform var(--transition), box-shadow var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.weather-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%);
+  pointer-events: none;
 }
 
 .weather-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--glass-shadow-lg),
+              inset 0 1px 1px rgba(255, 255, 255, 0.15);
 }
 
 /* ============ Weather Image ============ */
 .weather-image {
   height: 140px;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 50%, #fae8ff 100%);
+  background: linear-gradient(135deg, 
+    rgba(96, 165, 250, 0.2) 0%, 
+    rgba(167, 139, 250, 0.15) 50%, 
+    rgba(244, 114, 182, 0.1) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
 .weather-image::before {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
-  animation: shimmer 3s infinite linear;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(255, 255, 255, 0.08) 60deg,
+    transparent 120deg
+  );
+  animation: lightSweep 8s linear infinite;
 }
 
-@keyframes shimmer {
+@keyframes lightSweep {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
@@ -369,8 +507,8 @@ body {
 .weather-icon {
   width: 100px;
   height: 100px;
-  filter: drop-shadow(0 8px 20px rgba(99, 102, 241, 0.3))
-         drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+  filter: drop-shadow(0 8px 25px var(--accent-glow))
+         drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
   transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   animation: iconFloat 3s ease-in-out infinite;
 }
@@ -387,15 +525,14 @@ body {
 
 .weather-desc {
   font-size: 1.05rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
-  background: linear-gradient(135deg, var(--accent), #8b5cf6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  padding: 6px 16px;
+  padding: 8px 18px;
   border-radius: 999px;
-  position: relative;
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .weather-desc::before {
