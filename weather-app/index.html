@@ -14,12 +14,23 @@
   <!-- 🌧️ 비/눈 효과 컨테이너 -->
   <div id="weather-effects" class="weather-effects"></div>
   
-  <div class="app">
+  <div class="app-container">
     <!-- 제목 -->
     <header class="header">
-      <h1>날씨 검색</h1>
-      <p class="subtitle">도시를 입력하면 날씨와 옷차림을 알려드릴게요</p>
+      <h1>날씨</h1>
+      <p class="subtitle">도시를 검색하여 날씨와 옷차림을 확인하세요</p>
     </header>
+
+    <!-- 현재 위치 날씨 버튼 -->
+    <section class="location-section">
+      <button id="location-btn" class="location-btn" type="button">
+        <span class="location-icon">📍</span>
+        <span class="location-text">현재 위치 날씨</span>
+      </button>
+      <button id="remove-location-btn" class="remove-location-btn" type="button" style="display: none;">
+        ✕
+      </button>
+    </section>
 
     <!-- 검색 영역 -->
     <section class="search-section">
@@ -53,54 +64,58 @@
     <main class="result-section">
       <!-- 날씨 카드 -->
       <section class="weather-card">
-        <h3 class="section-title">
-          <span class="section-dot"></span>
-          날씨 정보
-        </h3>
+        <!-- 메인 날씨 정보 -->
+        <div class="weather-main">
+          <!-- 🔹 도시 이름 제목 -->
+          <h2 id="city-name" class="city-name-title">
+            도시를 검색해주세요
+          </h2>
 
-        <!-- 🔹 도시 이름 제목 -->
-        <h2 id="city-name" class="city-name-title">
-          도시를 검색하면 도시 이름이 표시됩니다
-        </h2>
+          <!-- 🔹 도시 현지 시간 표시 -->
+          <div class="city-time-display">
+            <span class="time-icon">🕐</span>
+            <span id="city-local-time" class="local-time">현지 시간: --:--</span>
+          </div>
 
-        <!-- 🔹 도시 현지 시간 표시 -->
-        <div class="city-time-display">
-          <span class="time-icon">🕐</span>
-          <span id="city-local-time" class="local-time">현지 시간: --:--</span>
-        </div>
-
-        <!-- 날씨 이미지(아이콘) -->
-        <div class="weather-image">
-          <span class="placeholder-text">날씨 이미지</span>
-        </div>
-
-        <!-- 현재 온도 -->
-        <div class="current-temp">
-          <h3>현재 온도</h3>
-          <p id="current-temp-value" class="temp-value">
-            -- °C
-          </p>
-        </div>
-
-        <!-- 미래 온도(일별) -->
-        <div class="future-temp">
-          <h3>미래 온도 (일별)</h3>
-          <div id="future-temp-list" class="future-temp-list">
-            <div class="future-temp-item">
-              <span class="label">예시</span>
-              <span class="value">-- °C</span>
+          <!-- 현재 날씨 요약 -->
+          <div class="weather-summary">
+            <!-- 날씨 이미지(아이콘) -->
+            <div class="weather-image">
+              <span class="placeholder-text">🌤️</span>
+            </div>
+            
+            <!-- 현재 온도 -->
+            <div class="current-temp">
+              <p id="current-temp-value" class="temp-value">--°</p>
+              <p id="weather-desc" class="weather-condition">날씨 정보</p>
             </div>
           </div>
         </div>
 
-        <!-- 시간별 날씨 -->
-        <div class="hourly-temp">
-          <h3>시간별 날씨 (1~3시간 후)</h3>
-          <div id="hourly-list" class="hourly-list">
-            <div class="hourly-item">
-              <span class="label">1시간 후</span>
-              <span class="value">-- °C</span>
+        <!-- 미래 온도(일별) -->
+        <div class="future-temp">
+          <h3 class="sub-section-title">일별 예보</h3>
+          <div id="future-temp-list" class="future-temp-list">
+            <div class="future-temp-item">
+              <span class="label">오늘</span>
+              <span class="value">--°</span>
             </div>
+            <div class="future-temp-item">
+              <span class="label">내일</span>
+              <span class="value">--°</span>
+            </div>
+            <div class="future-temp-item">
+              <span class="label">모레</span>
+              <span class="value">--°</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 시간별 날씨 (가로 스크롤) -->
+        <div class="hourly-temp">
+          <h3 class="sub-section-title">시간별 예보</h3>
+          <div id="hourly-list" class="hourly-list">
+            <!-- 시간별 아이템들이 여기에 동적으로 생성됩니다 -->
           </div>
         </div>
       </section>
@@ -129,6 +144,11 @@
           날씨를 검색하면 이곳에 옷차림 추천이 표시됩니다.
         </p>
       </section>
+
+      <!-- WeatherAPI.com 제공 표시 -->
+      <footer class="api-credit">
+        <p>날씨 데이터 제공: <a href="https://www.weatherapi.com/" target="_blank" rel="noopener noreferrer">WeatherAPI.com</a></p>
+      </footer>
     </main>
   </div>
 </body>

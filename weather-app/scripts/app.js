@@ -3,6 +3,7 @@ const cityInput = document.getElementById("city-input");
 const searchBtn = document.getElementById("search-btn");
 const cityNameEl = document.getElementById("city-name");
 const currentTempValueEl = document.getElementById("current-temp-value");
+const weatherDescEl = document.getElementById("weather-desc");
 const futureTempListEl = document.getElementById("future-temp-list");
 const hourlyListEl = document.getElementById("hourly-list");
 const weatherImageEl = document.querySelector(".weather-image");
@@ -10,6 +11,10 @@ const outfitTextEl = document.getElementById("outfit-text");
 const translatedCityEl = document.getElementById("translated-city");
 const cityLocalTimeEl = document.getElementById("city-local-time");
 const weatherEffectsEl = document.getElementById("weather-effects");
+
+// 현재 위치 버튼
+const locationBtn = document.getElementById("location-btn");
+const removeLocationBtn = document.getElementById("remove-location-btn");
 
 // 모드 인디케이터(AI / 기본)
 const modeAiEl = document.getElementById("mode-ai");
@@ -21,7 +26,9 @@ const clearHistoryBtn = document.getElementById("clear-history-btn");
 
 // 🔹 최근 검색 상태 + localStorage 키
 const HISTORY_KEY = "weatherSearchHistory";
+const LOCATION_KEY = "weatherCurrentLocation";
 let searchHistory = [];
+let currentLocationCity = null;
 
 // ==== 1. 옷차림 모드 표시 ====
 // mode: "ai" | "basic" | null
@@ -314,17 +321,21 @@ function renderWeather(data, displayCity) {
 
   // 2) 현재 온도
   const currentTemp = Math.round(data.current.temp_c);
-  if (currentTempValueEl) currentTempValueEl.textContent = `${currentTemp} °C`;
+  if (currentTempValueEl) currentTempValueEl.textContent = `${currentTemp}°`;
 
   // 3) 날씨 아이콘 + 설명
   const conditionText = data.current.condition.text;
   const iconUrl = "https:" + data.current.condition.icon;
 
+  // 날씨 설명 업데이트
+  if (weatherDescEl) {
+    weatherDescEl.textContent = conditionText;
+  }
+
   if (weatherImageEl) {
     weatherImageEl.innerHTML = `
       <div class="weather-icon-wrapper">
         <img src="${iconUrl}" alt="${conditionText}" class="weather-icon" />
-        <p class="weather-desc">${conditionText}</p>
       </div>
     `;
   }
@@ -337,20 +348,21 @@ function renderWeather(data, displayCity) {
     futureTempListEl.innerHTML = forecastDays
       .map((day, index) => {
         const avgTemp = Math.round(day.day.avgtemp_c);
-        const dateStr = day.date;
-        const label = labels[index] || dateStr;
+        const dayIconUrl = "https:" + day.day.condition.icon;
+        const label = labels[index] || day.date;
 
         return `
           <div class="future-temp-item">
             <span class="label">${label}</span>
-            <span class="value">${avgTemp} °C</span>
+            <img src="${dayIconUrl}" alt="${day.day.condition.text}" class="day-icon" />
+            <span class="value">${avgTemp}°</span>
           </div>
         `;
       })
       .join("");
   }
 
-  // 5) 시간별 날씨 (1~3시간 후)
+  // 5) 시간별 날씨 (12시간 - 가로 스크롤)
   if (hourlyListEl) {
     const allHours = [];
     forecastDays.forEach((day) => {
@@ -360,32 +372,38 @@ function renderWeather(data, displayCity) {
     const currentEpoch =
       data.current.last_updated_epoch || data.location.localtime_epoch;
 
-    const offsets = [1, 2, 3]; // 1시간, 2시간, 3시간 후
-    const hourlyItemsHtml = offsets
-      .map((offset) => {
-        const targetEpoch = currentEpoch + offset * 3600;
+    // 12시간 표시 (가로 스크롤)
+    const hourlyItemsHtml = [];
+    for (let offset = 1; offset <= 12; offset++) {
+      const targetEpoch = currentEpoch + offset * 3600;
 
-        // targetEpoch 이후의 가장 가까운 시간 데이터
-        let candidate = allHours.find((h) => h.time_epoch >= targetEpoch);
-        if (!candidate) {
-          candidate = allHours[allHours.length - 1];
-        }
+      // targetEpoch 이후의 가장 가까운 시간 데이터
+      let candidate = allHours.find((h) => h.time_epoch >= targetEpoch);
+      if (!candidate) {
+        candidate = allHours[allHours.length - 1];
+      }
 
-        const temp = Math.round(candidate.temp_c);
-        const condTextHour = candidate.condition.text;
-        const iconHourUrl = "https:" + candidate.condition.icon;
+      const temp = Math.round(candidate.temp_c);
+      const condTextHour = candidate.condition.text;
+      const iconHourUrl = "https:" + candidate.condition.icon;
+      
+      // 시간 포맷 (예: 오후 3시)
+      const hourTime = new Date(candidate.time_epoch * 1000);
+      const hour = hourTime.getHours();
+      const ampm = hour >= 12 ? "오후" : "오전";
+      const hour12 = hour % 12 || 12;
+      const timeLabel = `${ampm} ${hour12}시`;
 
-        return `
-          <div class="hourly-item">
-            <span class="label">${offset}시간 후</span>
-            <img src="${iconHourUrl}" alt="${condTextHour}" class="hourly-icon" />
-            <span class="value">${temp} °C</span>
-          </div>
-        `;
-      })
-      .join("");
+      hourlyItemsHtml.push(`
+        <div class="hourly-item">
+          <span class="label">${timeLabel}</span>
+          <img src="${iconHourUrl}" alt="${condTextHour}" class="hourly-icon" />
+          <span class="value">${temp}°</span>
+        </div>
+      `);
+    }
 
-    hourlyListEl.innerHTML = hourlyItemsHtml;
+    hourlyListEl.innerHTML = hourlyItemsHtml.join("");
   }
 
   // 6) 날씨 효과 적용 (비/눈)
@@ -538,3 +556,212 @@ if (clearHistoryBtn) {
 
 // 🔹 페이지 로드 시 히스토리 불러오기
 loadHistory();
+
+// =======================================================
+// 8. 현재 위치 날씨 기능
+// =======================================================
+
+// 저장된 위치 불러오기
+function loadSavedLocation() {
+  try {
+    const saved = localStorage.getItem(LOCATION_KEY);
+    if (saved) {
+      const { city, lat, lon } = JSON.parse(saved);
+      currentLocationCity = city;
+      if (removeLocationBtn) {
+        removeLocationBtn.style.display = "flex";
+      }
+      // 자동으로 날씨 검색
+      handleLocationWeather(lat, lon, city);
+    }
+  } catch (e) {
+    console.error("저장된 위치 로드 실패:", e);
+  }
+}
+
+// 위치 저장
+function saveLocation(city, lat, lon) {
+  try {
+    localStorage.setItem(LOCATION_KEY, JSON.stringify({ city, lat, lon }));
+    currentLocationCity = city;
+    if (removeLocationBtn) {
+      removeLocationBtn.style.display = "flex";
+    }
+  } catch (e) {
+    console.error("위치 저장 실패:", e);
+  }
+}
+
+// 위치 삭제
+function removeLocation() {
+  try {
+    localStorage.removeItem(LOCATION_KEY);
+    currentLocationCity = null;
+    if (removeLocationBtn) {
+      removeLocationBtn.style.display = "none";
+    }
+  } catch (e) {
+    console.error("위치 삭제 실패:", e);
+  }
+}
+
+// 좌표로 날씨 가져오기
+async function getForecastByCoords(lat, lon) {
+  const res = await fetch(
+    `/api/weather?lat=${lat}&lon=${lon}`
+  );
+
+  if (!res.ok) {
+    console.error("WeatherAPI proxy error:", await res.text());
+    throw new Error("날씨 정보를 가져오지 못했습니다.");
+  }
+
+  const data = await res.json();
+  return data;
+}
+
+// 위치 기반 날씨 처리
+async function handleLocationWeather(lat, lon, displayCity) {
+  try {
+    // 로딩 상태 표시
+    if (cityNameEl) cityNameEl.textContent = "현재 위치 날씨를 불러오는 중...";
+    if (currentTempValueEl) currentTempValueEl.textContent = "--°";
+    if (weatherDescEl) weatherDescEl.textContent = "로딩 중...";
+    if (futureTempListEl) futureTempListEl.innerHTML = "";
+    if (hourlyListEl) hourlyListEl.innerHTML = "";
+    if (weatherImageEl) {
+      weatherImageEl.innerHTML = '<span class="placeholder-text">⏳</span>';
+    }
+    if (outfitTextEl) outfitTextEl.textContent = "옷차림 추천을 준비 중입니다...";
+    setOutfitMode(null);
+
+    if (translatedCityEl) {
+      translatedCityEl.textContent = `현재 위치: ${displayCity || "확인 중..."}`;
+    }
+
+    // 좌표로 날씨 호출
+    const data = await getForecastByCoords(lat, lon);
+
+    // 도시 이름 가져오기
+    const cityName = displayCity || data.location.name;
+
+    // 화면 렌더링
+    const { currentTemp, conditionText } = renderWeather(data, cityName);
+
+    // 도시 현지 시간 표시 및 테마 적용
+    const localtime = data.location.localtime;
+    displayCityLocalTime(localtime);
+    applyTimeTheme(localtime);
+
+    // 위치 저장
+    saveLocation(cityName, lat, lon);
+
+    if (translatedCityEl) {
+      translatedCityEl.textContent = `현재 위치: ${cityName}`;
+    }
+
+    // 옷차림 추천
+    try {
+      const aiOutfit = await recommendOutfitToKorea(currentTemp, conditionText);
+      if (outfitTextEl) outfitTextEl.textContent = aiOutfit;
+      setOutfitMode("ai");
+    } catch (aiErr) {
+      console.error("옷차림 AI 추천 실패, JS 버전으로 대체:", aiErr);
+      const fallback = getOutfitSuggestion(currentTemp);
+      if (outfitTextEl) outfitTextEl.textContent = fallback;
+      setOutfitMode("basic");
+    }
+  } catch (err) {
+    console.error(err);
+    if (cityNameEl) cityNameEl.textContent = "위치 날씨를 가져오지 못했습니다 😢";
+    if (currentTempValueEl) currentTempValueEl.textContent = "--°";
+    if (weatherDescEl) weatherDescEl.textContent = "오류";
+  }
+}
+
+// 현재 위치 가져오기
+function getCurrentLocation() {
+  if (!navigator.geolocation) {
+    alert("이 브라우저에서는 위치 서비스를 지원하지 않습니다.");
+    return;
+  }
+
+  // 버튼 로딩 상태
+  if (locationBtn) {
+    locationBtn.innerHTML = '<span class="location-icon">⏳</span><span class="location-text">위치 확인 중...</span>';
+    locationBtn.disabled = true;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const { latitude, longitude } = position.coords;
+      
+      // 버튼 복구
+      if (locationBtn) {
+        locationBtn.innerHTML = '<span class="location-icon">📍</span><span class="location-text">현재 위치 날씨</span>';
+        locationBtn.disabled = false;
+      }
+
+      // 위치 기반 날씨 검색
+      await handleLocationWeather(latitude, longitude, null);
+    },
+    (error) => {
+      // 버튼 복구
+      if (locationBtn) {
+        locationBtn.innerHTML = '<span class="location-icon">📍</span><span class="location-text">현재 위치 날씨</span>';
+        locationBtn.disabled = false;
+      }
+
+      let message = "위치를 가져올 수 없습니다.";
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          message = "위치 권한이 거부되었습니다. 브라우저 설정에서 허용해주세요.";
+          break;
+        case error.POSITION_UNAVAILABLE:
+          message = "위치 정보를 사용할 수 없습니다.";
+          break;
+        case error.TIMEOUT:
+          message = "위치 요청 시간이 초과되었습니다.";
+          break;
+      }
+      alert(message);
+    },
+    {
+      enableHighAccuracy: false,
+      timeout: 10000,
+      maximumAge: 300000 // 5분 캐시
+    }
+  );
+}
+
+// 현재 위치 버튼 이벤트
+if (locationBtn) {
+  locationBtn.addEventListener("click", getCurrentLocation);
+}
+
+// 위치 제거 버튼 이벤트
+if (removeLocationBtn) {
+  removeLocationBtn.addEventListener("click", () => {
+    removeLocation();
+    // UI 초기화
+    if (cityNameEl) cityNameEl.textContent = "도시를 검색해주세요";
+    if (currentTempValueEl) currentTempValueEl.textContent = "--°";
+    if (weatherDescEl) weatherDescEl.textContent = "날씨 정보";
+    if (weatherImageEl) {
+      weatherImageEl.innerHTML = '<span class="placeholder-text">🌤️</span>';
+    }
+    if (translatedCityEl) {
+      translatedCityEl.textContent = "번역된 도시: (아직 없음)";
+    }
+    if (outfitTextEl) outfitTextEl.textContent = "날씨를 검색하면 이곳에 옷차림 추천이 표시됩니다.";
+    setOutfitMode(null);
+    
+    // 날씨 효과 제거
+    if (weatherEffectsEl) {
+      weatherEffectsEl.innerHTML = "";
+    }
+  });
+}
+
+// 페이지 로드 시 저장된 위치 확인
+loadSavedLocation();
