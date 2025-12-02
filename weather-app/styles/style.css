@@ -461,6 +461,137 @@ body::before {
   100% { transform: translateX(100%); }
 }
 
+/* ============ Weather Card Animations ============ */
+/* 사라지는 효과 */
+.weather-card.fade-out .weather-main,
+.weather-card.fade-out .future-temp,
+.weather-card.fade-out .hourly-temp {
+  animation: contentFadeOut 0.4s ease-out forwards;
+}
+
+.weather-card.fade-out .future-temp {
+  animation-delay: 0.1s;
+}
+
+.weather-card.fade-out .hourly-temp {
+  animation-delay: 0.2s;
+}
+
+@keyframes contentFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+}
+
+/* 나타나는 효과 */
+.weather-card.fade-in .weather-main {
+  animation: contentFadeIn 0.5s ease-out forwards;
+}
+
+.weather-card.fade-in .future-temp {
+  animation: contentFadeIn 0.5s ease-out 0.15s forwards;
+  opacity: 0;
+}
+
+.weather-card.fade-in .hourly-temp {
+  animation: contentFadeIn 0.5s ease-out 0.3s forwards;
+  opacity: 0;
+}
+
+.weather-card.fade-in .future-temp-item {
+  animation: itemPopIn 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+.weather-card.fade-in .future-temp-item:nth-child(1) { animation-delay: 0.2s; }
+.weather-card.fade-in .future-temp-item:nth-child(2) { animation-delay: 0.3s; }
+.weather-card.fade-in .future-temp-item:nth-child(3) { animation-delay: 0.4s; }
+
+.weather-card.fade-in .hourly-item {
+  animation: itemSlideIn 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+.weather-card.fade-in .hourly-item:nth-child(1) { animation-delay: 0.35s; }
+.weather-card.fade-in .hourly-item:nth-child(2) { animation-delay: 0.4s; }
+.weather-card.fade-in .hourly-item:nth-child(3) { animation-delay: 0.45s; }
+.weather-card.fade-in .hourly-item:nth-child(4) { animation-delay: 0.5s; }
+.weather-card.fade-in .hourly-item:nth-child(5) { animation-delay: 0.55s; }
+.weather-card.fade-in .hourly-item:nth-child(6) { animation-delay: 0.6s; }
+.weather-card.fade-in .hourly-item:nth-child(7) { animation-delay: 0.65s; }
+.weather-card.fade-in .hourly-item:nth-child(8) { animation-delay: 0.7s; }
+.weather-card.fade-in .hourly-item:nth-child(9) { animation-delay: 0.75s; }
+.weather-card.fade-in .hourly-item:nth-child(10) { animation-delay: 0.8s; }
+.weather-card.fade-in .hourly-item:nth-child(11) { animation-delay: 0.85s; }
+.weather-card.fade-in .hourly-item:nth-child(12) { animation-delay: 0.9s; }
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes itemPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes itemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 날씨 아이콘 등장 효과 */
+.weather-card.fade-in .weather-icon {
+  animation: iconBounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes iconBounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-180deg);
+  }
+  60% {
+    transform: scale(1.2) rotate(10deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* 온도 카운트 효과용 */
+.temp-value.counting {
+  animation: tempPulse 0.1s ease-in-out;
+}
+
+@keyframes tempPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
 /* ============ Result Section ============ */
 .result-section {
   display: flex;
