@@ -24,9 +24,12 @@ module.exports = async (req, res) => {
           parts: [
             {
               text:
-                "Translate Korean city name to English city name.\n" +
-                "Answer with English city name only. No extra words or quotes.\n" +
-                `Text: ${text}`,
+                "You are a city name translator with content filtering.\n\n" +
+                "RULES:\n" +
+                "1. If the input contains profanity, slurs, offensive language, inappropriate content, or is NOT a valid city/location name, respond with exactly: INVALID\n" +
+                "2. If the input is a valid Korean city/location name, translate it to English.\n" +
+                "3. Answer with English city name only. No extra words, quotes, or explanations.\n\n" +
+                `Input: ${text}`,
             },
           ],
         },
@@ -60,6 +63,12 @@ module.exports = async (req, res) => {
 
     if (!translated) {
       res.status(500).json({ error: "번역 결과를 읽을 수 없습니다." });
+      return;
+    }
+
+    // 비속어/부적절한 입력 필터링
+    if (translated === "INVALID" || translated.toUpperCase() === "INVALID") {
+      res.status(400).json({ error: "유효하지 않은 도시명입니다. 올바른 도시 이름을 입력해주세요." });
       return;
     }
 
