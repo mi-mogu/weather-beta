@@ -1,11 +1,11 @@
 /* ============ CSS Variables - Samsung One UI + Liquid Glass ============ */
 :root {
-  /* One UI 기반 색상 */
+  /* One UI 기반 ?�상 */
   --bg-primary: #0d1117;
   --bg-secondary: #161b22;
   --bg-card: rgba(30, 38, 48, 0.85);
   
-  /* Liquid Glass 효과 */
+  /* Liquid Glass ?�과 */
   --glass-bg: rgba(255, 255, 255, 0.06);
   --glass-bg-strong: rgba(255, 255, 255, 0.1);
   --glass-border: rgba(255, 255, 255, 0.12);
@@ -14,18 +14,18 @@
   --glass-shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
   --glass-blur: blur(24px) saturate(180%);
   
-  /* 텍스트 색상 */
+  /* ?�스???�상 */
   --text-primary: rgba(255, 255, 255, 0.95);
   --text-secondary: rgba(255, 255, 255, 0.65);
   --text-muted: rgba(255, 255, 255, 0.4);
   
-  /* One UI 강조색 */
+  /* One UI 강조??*/
   --accent: #4fc3f7;
   --accent-light: #81d4fa;
   --accent-glow: rgba(79, 195, 247, 0.35);
   --accent-gradient: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
   
-  /* 상태 색상 */
+  /* ?�태 ?�상 */
   --success: #4caf50;
   --warning: #ffb74d;
   --danger: #f44336;
@@ -37,7 +37,7 @@
   --radius-sm: 8px;
   --radius-pill: 999px;
   
-  /* 트랜지션 */
+  /* ?�랜지??*/
   --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -64,7 +64,7 @@ body {
   position: relative;
 }
 
-/* 배경 글로우 효과 */
+/* 배경 글로우 ?�과 */
 body::before {
   content: '';
   position: fixed;
@@ -144,7 +144,7 @@ body::before {
   margin-bottom: 12px;
 }
 
-.location-btn {
+.reset-btn {
   flex: 1;
   display: flex;
   align-items: center;
@@ -155,21 +155,25 @@ body::before {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-pill);
-  color: var(--accent-light);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
   transition: all var(--transition);
   backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 1;
 }
 
-.location-btn:hover {
+.reset-btn:hover {
   background: var(--glass-bg-strong);
   border-color: var(--accent);
+  color: var(--accent-light);
   box-shadow: 0 0 15px var(--accent-glow);
 }
 
-.location-btn:active {
+.reset-btn:active,
+.reset-btn.clicked {
   transform: scale(0.95);
   background: rgba(79, 195, 247, 0.25);
   border-color: var(--accent-light);
@@ -177,39 +181,19 @@ body::before {
   transition: all 0.05s ease;
 }
 
-.location-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.location-icon {
+.reset-icon {
   font-size: 1rem;
+  transition: transform 0.3s ease;
+  pointer-events: none;
 }
 
-.location-text {
+.reset-btn:hover .reset-icon {
+  transform: rotate(180deg);
+}
+
+.reset-text {
   font-size: 0.9rem;
-}
-
-.remove-location-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(244, 67, 54, 0.15);
-  border: 1px solid rgba(244, 67, 54, 0.3);
-  color: var(--danger);
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.remove-location-btn:hover {
-  background: rgba(244, 67, 54, 0.25);
-  border-color: var(--danger);
+  pointer-events: none;
 }
 
 /* ============ Search Section - One UI ============ */
@@ -251,6 +235,9 @@ body::before {
 }
 
 #search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 0 24px;
   height: 48px;
   border-radius: var(--radius-pill);
@@ -793,7 +780,7 @@ body::before {
 
 /* ============ Time-Based Themes - One UI Enhanced ============ */
 
-/* 새벽 (5~7시) - 부드러운 분홍빛 */
+/* ?�벽 (5~7?? - 부?�러??분홍�?*/
 body.theme-dawn {
   background: linear-gradient(
     135deg,
@@ -809,7 +796,7 @@ body.theme-dawn .app-container {
   border-color: rgba(201, 127, 176, 0.2);
 }
 
-/* 아침 (7~11시) - 밝은 노란빛 */
+/* ?�침 (7~11?? - 밝�? ?��?�?*/
 body.theme-morning {
   background: linear-gradient(
     135deg,
@@ -825,7 +812,7 @@ body.theme-morning .app-container {
   border-color: rgba(122, 154, 170, 0.2);
 }
 
-/* 낮 (11~17시) - 맑은 하늘색 */
+/* ??(11~17?? - 맑�? ?�늘??*/
 body.theme-day {
   background: linear-gradient(
     135deg,
@@ -841,7 +828,7 @@ body.theme-day .app-container {
   border-color: rgba(74, 154, 176, 0.2);
 }
 
-/* 일몰 (17~19시) - 주황빛 석양 */
+/* ?�몰 (17~19?? - 주황�??�양 */
 body.theme-sunset {
   background: linear-gradient(
     135deg,
@@ -858,7 +845,7 @@ body.theme-sunset .app-container {
   border-color: rgba(170, 90, 90, 0.2);
 }
 
-/* 저녁 (19~21시) - 보라빛 황혼 */
+/* ?�??(19~21?? - 보라�??�혼 */
 body.theme-evening {
   background: linear-gradient(
     135deg,
@@ -875,7 +862,7 @@ body.theme-evening .app-container {
   border-color: rgba(122, 74, 170, 0.2);
 }
 
-/* 밤 (21~5시) - 어두운 남색 */
+/* �?(21~5?? - ?�두???�색 */
 body.theme-night {
   background: linear-gradient(
     135deg,
@@ -891,7 +878,7 @@ body.theme-night .app-container {
   border-color: rgba(100, 100, 150, 0.15);
 }
 
-/* 밤 테마 글래스 스타일 강화 */
+/* �??�마 글?�스 ?��???강화 */
 body.theme-night .weather-card,
 body.theme-night .outfit-section {
   background: rgba(30, 30, 50, 0.6);
@@ -916,7 +903,7 @@ body.theme-night .hourly-item {
 
 /* ============ Responsive Design ============ */
 
-/* ============ One UI Ultra Wide Dashboard (1400px 이상) ============ */
+/* ============ One UI Ultra Wide Dashboard (1400px ?�상) ============ */
 @media (min-width: 1400px) {
   body {
     padding: 50px;
@@ -928,7 +915,7 @@ body.theme-night .hourly-item {
     padding: 36px 40px;
   }
   
-  /* 헤더 */
+  /* ?�더 */
   .header {
     text-align: left;
     margin-bottom: 28px;
@@ -947,7 +934,7 @@ body.theme-night .hourly-item {
     font-size: 0.95rem;
   }
   
-  /* 검색 & 위치 - 헤더 영역에 통합 (컴팩트) */
+  /* 검??& ?�치 - ?�더 ?�역???�합 (컴팩?? */
   .location-section {
     position: absolute;
     top: 32px;
@@ -956,18 +943,18 @@ body.theme-night .hourly-item {
     height: 42px;
   }
   
-  .location-btn {
+  .reset-btn {
     padding: 0 16px;
     height: 42px;
     font-size: 0.85rem;
     gap: 6px;
   }
   
-  .location-icon {
+  .reset-icon {
     font-size: 1rem;
   }
   
-  .location-text {
+  .reset-text {
     font-size: 0.85rem;
   }
   
@@ -1005,7 +992,7 @@ body.theme-night .hourly-item {
     display: none;
   }
   
-  /* 히스토리 */
+  /* ?�스?�리 */
   .history-section {
     margin-bottom: 28px;
     padding: 16px 20px;
@@ -1017,7 +1004,7 @@ body.theme-night .hourly-item {
     gap: 12px;
   }
   
-  /* One UI 대시보드 그리드 - 3열 레이아웃 */
+  /* One UI ?�?�보??그리??- 3???�이?�웃 */
   .result-section {
     display: grid;
     grid-template-columns: 1.2fr 1fr 1fr;
@@ -1033,7 +1020,7 @@ body.theme-night .hourly-item {
     display: contents;
   }
   
-  /* 메인 날씨 - 좌측 */
+  /* 메인 ?�씨 - 좌측 */
   .weather-main {
     grid-area: main;
     padding: 28px;
@@ -1078,7 +1065,7 @@ body.theme-night .hourly-item {
     margin-top: 10px;
   }
   
-  /* 일별 예보 - 중앙 */
+  /* ?�별 ?�보 - 중앙 */
   .future-temp {
     grid-area: daily;
     padding: 24px;
@@ -1127,7 +1114,7 @@ body.theme-night .hourly-item {
     text-align: right;
   }
   
-  /* 옷차림 추천 - 우측 */
+  /* ?�차�?추천 - ?�측 */
   .outfit-section {
     grid-area: outfit;
     padding: 24px;
@@ -1147,7 +1134,7 @@ body.theme-night .hourly-item {
     overflow-y: auto;
   }
   
-  /* 시간별 예보 - 하단 전체 */
+  /* ?�간�??�보 - ?�단 ?�체 */
   .hourly-temp {
     grid-area: hourly;
     padding: 24px;
@@ -1180,7 +1167,7 @@ body.theme-night .hourly-item {
     font-size: 1rem;
   }
   
-  /* API 크레딧 */
+  /* API ?�레??*/
   .api-credit {
     grid-area: credit;
     text-align: center;
@@ -1201,7 +1188,7 @@ body.theme-night .hourly-item {
     padding: 32px;
   }
   
-  /* 헤더 - 와이드 레이아웃 */
+  /* ?�더 - ?�?�드 ?�이?�웃 */
   .header {
     text-align: left;
     margin-bottom: 24px;
@@ -1220,7 +1207,7 @@ body.theme-night .hourly-item {
     font-size: 0.9rem;
   }
   
-  /* 검색 & 위치 - 헤더 우측 배치 (컴팩트) */
+  /* 검??& ?�치 - ?�더 ?�측 배치 (컴팩?? */
   .location-section {
     position: absolute;
     top: 30px;
@@ -1229,18 +1216,18 @@ body.theme-night .hourly-item {
     height: 40px;
   }
   
-  .location-btn {
+  .reset-btn {
     padding: 0 14px;
     height: 40px;
     font-size: 0.8rem;
     gap: 5px;
   }
   
-  .location-icon {
+  .reset-icon {
     font-size: 0.95rem;
   }
   
-  .location-text {
+  .reset-text {
     font-size: 0.8rem;
   }
   
@@ -1274,12 +1261,12 @@ body.theme-night .hourly-item {
     min-width: 56px;
   }
   
-  /* 번역 도시 - 숨김 */
+  /* 번역 ?�시 - ?��? */
   .translated-city {
     display: none;
   }
   
-  /* 히스토리 - 가로 배치 */
+  /* ?�스?�리 - 가�?배치 */
   .history-section {
     margin-bottom: 24px;
     padding: 14px 18px;
@@ -1295,7 +1282,7 @@ body.theme-night .hourly-item {
     flex-shrink: 0;
   }
   
-  /* ========== One UI 대시보드 그리드 레이아웃 ========== */
+  /* ========== One UI ?�?�보??그리???�이?�웃 ========== */
   .result-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1307,12 +1294,12 @@ body.theme-night .hourly-item {
       "credit  credit";
   }
   
-  /* 날씨 카드 - 그리드 컨테이너 역할 */
+  /* ?�씨 카드 - 그리??컨테?�너 ??�� */
   .weather-card {
     display: contents;
   }
   
-  /* 메인 날씨 정보 - 좌측 상단 */
+  /* 메인 ?�씨 ?�보 - 좌측 ?�단 */
   .weather-main {
     grid-area: main;
     padding: 24px;
@@ -1364,7 +1351,7 @@ body.theme-night .hourly-item {
     margin-top: 8px;
   }
   
-  /* 옷차림 추천 - 우측 상단 */
+  /* ?�차�?추천 - ?�측 ?�단 */
   .outfit-section {
     grid-area: outfit;
     padding: 24px;
@@ -1389,7 +1376,7 @@ body.theme-night .hourly-item {
     max-height: 150px;
   }
   
-  /* 일별 예보 - 좌측 하단 */
+  /* ?�별 ?�보 - 좌측 ?�단 */
   .future-temp {
     grid-area: daily;
     padding: 20px;
@@ -1424,7 +1411,7 @@ body.theme-night .hourly-item {
     font-size: 1.2rem;
   }
   
-  /* 시간별 예보 - 우측 하단 */
+  /* ?�간�??�보 - ?�측 ?�단 */
   .hourly-temp {
     grid-area: hourly;
     padding: 20px;
@@ -1452,7 +1439,7 @@ body.theme-night .hourly-item {
     height: 40px;
   }
   
-  /* API 크레딧 - 하단 전체 */
+  /* API ?�레??- ?�단 ?�체 */
   .api-credit {
     grid-area: credit;
     text-align: center;
@@ -1490,7 +1477,7 @@ body.theme-night .hourly-item {
     margin-left: 12px;
   }
   
-  /* 검색 & 위치 (컴팩트) */
+  /* 검??& ?�치 (컴팩?? */
   .location-section {
     position: absolute;
     top: 26px;
@@ -1499,18 +1486,18 @@ body.theme-night .hourly-item {
     height: 38px;
   }
   
-  .location-btn {
+  .reset-btn {
     padding: 0 12px;
     height: 38px;
     font-size: 0.75rem;
     gap: 5px;
   }
   
-  .location-icon {
+  .reset-icon {
     font-size: 0.9rem;
   }
   
-  .location-text {
+  .reset-text {
     font-size: 0.75rem;
   }
   
@@ -1548,7 +1535,7 @@ body.theme-night .hourly-item {
     display: none;
   }
   
-  /* 히스토리 */
+  /* ?�스?�리 */
   .history-section {
     margin-bottom: 20px;
   }
@@ -1558,7 +1545,7 @@ body.theme-night .hourly-item {
     overflow-x: auto;
   }
   
-  /* One UI 대시보드 그리드 */
+  /* One UI ?�?�보??그리??*/
   .result-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1648,7 +1635,7 @@ body.theme-night .hourly-item {
   }
 }
 
-/* 태블릿 가로 (768px ~ 991px) */
+/* ?�블�?가�?(768px ~ 991px) */
 @media (min-width: 768px) and (max-width: 991px) {
   body {
     padding: 24px;
@@ -1664,7 +1651,7 @@ body.theme-night .hourly-item {
   }
 }
 
-/* 태블릿 세로 및 큰 모바일 (768px 이하) */
+/* ?�블�??�로 �???모바??(768px ?�하) */
 @media (max-width: 768px) {
   body {
     padding: 16px;
@@ -1687,12 +1674,12 @@ body.theme-night .hourly-item {
     padding: 16px;
   }
   
-  .location-btn {
+  .reset-btn {
     padding: 10px 14px;
     font-size: 0.85rem;
   }
   
-  .location-icon {
+  .reset-icon {
     font-size: 0.9rem;
   }
   
@@ -1703,7 +1690,7 @@ body.theme-night .hourly-item {
   }
 }
 
-/* 일반 모바일 (576px 이하) */
+/* ?�반 모바??(576px ?�하) */
 @media (max-width: 576px) {
   body {
     padding: 12px;
@@ -1729,7 +1716,7 @@ body.theme-night .hourly-item {
   
   #city-input {
     padding: 14px 18px;
-    font-size: 16px; /* iOS 줌 방지 */
+    font-size: 16px; /* iOS �?방�? */
   }
   
   #search-btn {
@@ -1742,13 +1729,13 @@ body.theme-night .hourly-item {
     margin-bottom: 10px;
   }
   
-  .location-btn {
+  .reset-btn {
     height: 40px;
     padding: 0 12px;
     font-size: 0.85rem;
   }
   
-  .location-icon {
+  .reset-icon {
     font-size: 0.9rem;
   }
   
@@ -1796,7 +1783,7 @@ body.theme-night .hourly-item {
   }
 }
 
-/* 작은 모바일 (480px 이하) */
+/* ?��? 모바??(480px ?�하) */
 @media (max-width: 480px) {
   body {
     padding: 10px;
@@ -1814,13 +1801,13 @@ body.theme-night .hourly-item {
     font-size: 0.8rem;
   }
   
-  .location-btn {
+  .reset-btn {
     height: 38px;
     padding: 0 10px;
     font-size: 0.8rem;
   }
   
-  .location-text {
+  .reset-text {
     font-size: 0.75rem;
   }
   
@@ -1961,7 +1948,7 @@ body.theme-night .hourly-item {
   }
 }
 
-/* 매우 작은 모바일 (400px 이하) */
+/* 매우 ?��? 모바??(400px ?�하) */
 @media (max-width: 400px) {
   body {
     padding: 8px;
@@ -1987,18 +1974,18 @@ body.theme-night .hourly-item {
     flex-wrap: wrap;
   }
   
-  .location-btn {
+  .reset-btn {
     height: 36px;
     padding: 0 10px;
     font-size: 0.75rem;
     gap: 4px;
   }
   
-  .location-icon {
+  .reset-icon {
     font-size: 0.8rem;
   }
   
-  .location-text {
+  .reset-text {
     font-size: 0.7rem;
   }
   
@@ -2051,7 +2038,7 @@ body.theme-night .hourly-item {
   }
 }
 
-/* 최소 모바일 (360px 이하) */
+/* 최소 모바??(360px ?�하) */
 @media (max-width: 360px) {
   body {
     padding: 6px;
@@ -2079,17 +2066,17 @@ body.theme-night .hourly-item {
     margin-bottom: 10px;
   }
   
-  .location-btn {
+  .reset-btn {
     height: 34px;
     padding: 0 8px;
     font-size: 0.7rem;
   }
   
-  .location-icon {
+  .reset-icon {
     font-size: 0.75rem;
   }
   
-  .location-text {
+  .reset-text {
     font-size: 0.65rem;
   }
   
@@ -2252,7 +2239,7 @@ body.theme-night .hourly-item {
   }
 }
 
-/* 초소형 모바일 (320px 이하) */
+/* 초소??모바??(320px ?�하) */
 @media (max-width: 320px) {
   body {
     padding: 4px;
@@ -2271,7 +2258,7 @@ body.theme-night .hourly-item {
     align-items: stretch;
   }
   
-  .location-btn {
+  .reset-btn {
     width: 100%;
     height: 40px;
     justify-content: center;
@@ -2317,7 +2304,7 @@ body.theme-night .hourly-item {
   overflow: hidden;
 }
 
-/* 비 파티클 - 글래스 효과 */
+/* �??�티??- 글?�스 ?�과 */
 .particle-rain {
   position: absolute;
   top: -30px;
@@ -2349,7 +2336,7 @@ body.theme-night .hourly-item {
   }
 }
 
-/* 눈 파티클 - 글래스 효과 */
+/* ???�티??- 글?�스 ?�과 */
 .particle-snow {
   position: absolute;
   top: -20px;
@@ -2394,7 +2381,7 @@ body.theme-night .hourly-item {
   }
 }
 
-/* 진눈깨비 파티클 - 글래스 효과 */
+/* 진눈깨비 ?�티??- 글?�스 ?�과 */
 .particle-sleet {
   position: absolute;
   top: -20px;
