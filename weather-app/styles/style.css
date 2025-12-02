@@ -752,6 +752,20 @@ body::before {
   color: var(--text-secondary);
   line-height: 1.65;
   font-weight: 400;
+  min-height: 1.65em;
+}
+
+#outfit-text.typing::after {
+  content: "|";
+  animation: blink 0.7s infinite;
+  color: var(--accent);
+  font-weight: 300;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
 /* ============ API Credit Footer ============ */

@@ -46,6 +46,36 @@ function setOutfitMode(mode) {
 }
 // 처음에는 아무 색도 안 들어온 상태 (호출 X)
 
+// ==== 1.1. 타이핑 효과 함수 ====
+let typingTimeout = null;
+function typeText(element, text, speed = 25) {
+  if (!element) return;
+  
+  // 이전 타이핑 취소
+  if (typingTimeout) {
+    clearTimeout(typingTimeout);
+    typingTimeout = null;
+  }
+  
+  element.textContent = "";
+  element.classList.add("typing");
+  
+  let index = 0;
+  
+  function type() {
+    if (index < text.length) {
+      element.textContent += text.charAt(index);
+      index++;
+      typingTimeout = setTimeout(type, speed);
+    } else {
+      element.classList.remove("typing");
+      typingTimeout = null;
+    }
+  }
+  
+  type();
+}
+
 // ==== 1.5. 날씨 효과 (비/눈) ====
 function applyWeatherEffect(conditionCode) {
   if (!weatherEffectsEl) return;
@@ -476,12 +506,12 @@ async function handleSearch(initialInput) {
         currentTemp,
         conditionText
       );
-      if (outfitTextEl) outfitTextEl.textContent = aiOutfit;
+      typeText(outfitTextEl, aiOutfit, 20);
       setOutfitMode("ai"); // ✅ AI 응답: AI에 불 ON
     } catch (aiErr) {
       console.error("옷차림 AI 추천 실패, JS 버전으로 대체:", aiErr);
       const fallback = getOutfitSuggestion(currentTemp);
-      if (outfitTextEl) outfitTextEl.textContent = fallback;
+      typeText(outfitTextEl, fallback, 20);
       setOutfitMode("basic"); // ✅ 실패 시 기본에 불 ON
     }
   } catch (err) {
@@ -674,12 +704,12 @@ async function handleLocationWeather(lat, lon, displayCity) {
     // 옷차림 추천
     try {
       const aiOutfit = await recommendOutfitToKorea(currentTemp, conditionText);
-      if (outfitTextEl) outfitTextEl.textContent = aiOutfit;
+      typeText(outfitTextEl, aiOutfit, 20);
       setOutfitMode("ai");
     } catch (aiErr) {
       console.error("옷차림 AI 추천 실패, JS 버전으로 대체:", aiErr);
       const fallback = getOutfitSuggestion(currentTemp);
-      if (outfitTextEl) outfitTextEl.textContent = fallback;
+      typeText(outfitTextEl, fallback, 20);
       setOutfitMode("basic");
     }
   } catch (err) {
